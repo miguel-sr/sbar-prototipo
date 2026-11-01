@@ -1,0 +1,20 @@
+services:
+  sbar-postgres:
+    image: postgres:16-alpine
+    container_name: sbar-postgres
+    environment:
+      POSTGRES_DB: sbar
+      POSTGRES_USER: sbar
+      POSTGRES_PASSWORD: sbar
+    ports:
+      - "5432:5432"
+    volumes:
+      - sbar-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sbar -d sbar"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  sbar-postgres-data:
