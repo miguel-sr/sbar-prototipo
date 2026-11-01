@@ -77,8 +77,26 @@ public class ServicoDeMetricas(
         if (invalidos > 0)
             avisos.Add($"{invalidos} fluxo(s) principal(is) inválido(s) — sem aresta em alguma etapa — ficam fora do cálculo de DEP (TCC 4.2.7).");
 
+        avisos.AddRange(AvisosDeNosSemLigacao(estudoDeCaso, contexto));
+
         return new ResultadoDeMetricas(
             eixos, recomendacao, nosGargalo, comunidades, contexto.Comunidades.ModularidadeQ, avisos, bandas, fluxos, parametros.Versao);
+    }
+
+    // Nó sem arestas (com m > 0) — casos-limite de formulas-metricas.md e passo 7 do TCC (4.2.7): um Mapa validado não
+    // deve ter nós soltos. Cada um vira uma comunidade própria com 0 saídas e distorce ESC, AUT, FLEX e DISP; o cálculo
+    // não muda, apenas avisa e identifica os nós. Mapa sem nenhuma aresta (m = 0) já é tratado como eixos não aplicáveis.
+    private static IEnumerable<string> AvisosDeNosSemLigacao(EstudoDeCaso estudoDeCaso, ContextoDoMapa contexto)
+    {
+        if (contexto.M == 0)
+            yield break;
+
+        foreach (var no in estudoDeCaso.Nos)
+        {
+            var grau = contexto.GrausEntrada.GetValueOrDefault(no.Id) + contexto.GrausSaida.GetValueOrDefault(no.Id);
+            if (grau == 0)
+                yield return $"O nó \"{no.Nome}\" não entra em nenhuma ligação do Mapa: ele forma uma comunidade própria sem saídas e distorce ESC, AUT, FLEX e DISP. Ligue-o ao Mapa ou remova-o (TCC 4.2.7, passo 7).";
+        }
     }
 
     // saidas_externas(c) — TCC 4.4.2 (AUT): arestas que PARTEM de nós da comunidade para nós de outra comunidade.

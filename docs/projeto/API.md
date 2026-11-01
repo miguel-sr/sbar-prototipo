@@ -279,7 +279,7 @@ Response `200 OK` (valores do Estudo de Caso 1 do TCC revisado; listas abreviada
 - `eixos` sempre tem **10 itens**, um por valor de `Eixo` — mesmo quando `aplicavel: false` (mostre `motivo` em vez de um número). O DEP é "não aplicável" quando nenhum fluxo válido está cadastrado.
 - `nosGargalo`: ids de **todos** os Nós gargalo (o "ponto potencialmente crítico" do TCC), de qualquer Banda (`carga(v) > μ + σ` da própria Banda).
 - `comunidades` / `modularidadeQ`: partição em **comunidades estruturais** (TCC 4.4.1, CNM guloso; base de FLEX e AUT). `indice` começa em 1, na ordem da menor posição de cadastro dos Nós; `saidasExternas` conta as arestas que partem da comunidade para outra (autônoma quando ≤ 1). `modularidadeQ` é `null` quando o Mapa não tem arestas; `Q > ~0,3` indica estrutura significativa.
-- `avisos`: textos prontos para mostrar — comunidade única (FLEX e AUT degenerados), Mapa sem arestas, `Q < 0,3` e **fluxos inválidos** (ficam fora do DEP).
+- `avisos`: textos prontos para mostrar — comunidade única (FLEX e AUT degenerados), Mapa sem arestas, `Q < 0,3`, **fluxos inválidos** (ficam fora do DEP) e **nós sem nenhuma ligação** em um Mapa com arestas (um aviso por nó, com o nome; o cálculo não muda).
 - `bandas`: μ, σ (populacional) e limiar `μ + σ` de cada banda ocupada (critério de gargalo, US04).
 - `fluxos`: resumo dos fluxos cadastrados (os válidos alimentam o DEP).
 - `versaoDosParametros`: versão dos limites, pesos e assinaturas usada (RF11, US06).

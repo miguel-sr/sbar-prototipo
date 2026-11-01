@@ -115,6 +115,38 @@ public class ServicoDeMetricasTests
     }
 
     [Fact]
+    [Trait("Requisito", "CT03")]
+    public async Task CalcularAsync_DeveAvisarIdentificandoOsNos_QuandoHaNosSemNenhumaLigacao()
+    {
+        // Achado F-01 da bateria de testes: nós soltos (com m > 0) distorcem ESC/AUT/FLEX/DISP — no Estudo de Caso 1,
+        // dois deles trocam o perfil mais próximo. O valor calculado não muda; o que muda é que o usuário é avisado.
+        var (estudoDeCaso, _) = EstudosDeCasoDeReferencia.CriarEstudoDeCaso1();
+        estudoDeCaso.AdicionarNo("Relatório gerencial", TipoDeNo.Processo);
+        estudoDeCaso.AdicionarNo("Auditoria interna", TipoDeNo.Processo);
+        _estudoDeCasoRepositorio.Setup(r => r.ObterPorIdAsync(estudoDeCaso.Id)).ReturnsAsync(estudoDeCaso);
+
+        var resultado = await _servico.CalcularAsync(estudoDeCaso.Id);
+
+        resultado.Avisos.Should().HaveCount(2);
+        resultado.Avisos.Should().ContainSingle(a => a.Contains("\"Relatório gerencial\"") && a.Contains("não entra em nenhuma ligação"));
+        resultado.Avisos.Should().ContainSingle(a => a.Contains("\"Auditoria interna\""));
+    }
+
+    [Fact]
+    public async Task CalcularAsync_NaoDeveAvisarDeNoSolto_QuandoOMapaNaoTemArestas()
+    {
+        // m = 0 já deixa INT/TR/VOL não aplicáveis; todos os nós seriam "soltos" e o aviso seria ruído.
+        var estudoDeCaso = EstudoDeCaso.Criar("Sem ligações");
+        estudoDeCaso.AdicionarNo("Cliente", TipoDeNo.Ator);
+        estudoDeCaso.AdicionarNo("Cadastro", TipoDeNo.Processo);
+        _estudoDeCasoRepositorio.Setup(r => r.ObterPorIdAsync(estudoDeCaso.Id)).ReturnsAsync(estudoDeCaso);
+
+        var resultado = await _servico.CalcularAsync(estudoDeCaso.Id);
+
+        resultado.Avisos.Should().NotContain(a => a.Contains("nenhuma ligação"));
+    }
+
+    [Fact]
     public async Task CalcularAsync_DeveAvisarEDeixarDepNaoAplicavel_QuandoOUnicoFluxoFicaInvalido()
     {
         var (estudoDeCaso, nos) = EstudosDeCasoDeReferencia.CriarEstudoDeCaso1();
