@@ -1,0 +1,36 @@
+# .NET
+bin/
+obj/
+*.user
+.vs/
+TestResults/
+
+# Front-end (quando existir)
+node_modules/
+dist/
+
+# Segredos/config locais — nunca versionar connection string, mesmo de Postgres local.
+# Cada dev copia o .example correspondente e ajusta como quiser.
+appsettings.Development.json
+appsettings.Development.local.json
+.env
+*.tsbuildinfo
+
+# Playwright (E2E)
+playwright-report/
+test-results/
+blob-report/
+
+# Terraform (estado e variáveis locais nunca são versionados)
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+crash.log
+
+# Saída de cobertura (backend: coverlet/ReportGenerator; front: Vitest)
+coverage/
+TestResults/
+
+# Sessão do usuário E2E (cookie gerado pelo setup global do Playwright)
+frontend/e2e/.auth/

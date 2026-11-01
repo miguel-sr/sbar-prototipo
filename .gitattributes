@@ -1,0 +1,3 @@
+
+# Scripts executados no Linux (EC2) precisam ficar com LF mesmo em checkout no Windows
+deploy/terraform/*.sh text eol=lf
