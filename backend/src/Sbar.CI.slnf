@@ -1,0 +1,14 @@
+{
+  "solution": {
+    "path": "Sbar.sln",
+    "projects": [
+      "Sbar.Api\\Sbar.Api.csproj",
+      "Sbar.Api.Tests\\Sbar.Api.Tests.csproj",
+      "Sbar.Application\\Sbar.Application.csproj",
+      "Sbar.Application.Tests\\Sbar.Application.Tests.csproj",
+      "Sbar.Domain\\Sbar.Domain.csproj",
+      "Sbar.Domain.Tests\\Sbar.Domain.Tests.csproj",
+      "Sbar.Infrastructure\\Sbar.Infrastructure.csproj"
+    ]
+  }
+}

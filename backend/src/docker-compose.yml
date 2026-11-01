@@ -1,0 +1,34 @@
+# Compose de desenvolvimento do Visual Studio (projeto docker-compose.dcproj da Sbar.sln):
+# F5 sobe a API em container + o Postgres. Não confundir com o docker-compose.yml da raiz
+# (só Postgres, para rodar a API fora de container) nem com deploy/docker-compose.yml (produção).
+# Não suba este e o da raiz ao mesmo tempo — ambos usam a porta 5432.
+services:
+  sbar-api:
+    image: sbar-api
+    container_name: sbar-api-dev
+    build:
+      context: .
+      dockerfile: Sbar.Api/Dockerfile
+    depends_on:
+      sbar-db:
+        condition: service_healthy
+
+  sbar-db:
+    image: postgres:16-alpine
+    container_name: sbar-db-dev
+    environment:
+      POSTGRES_DB: sbar
+      POSTGRES_USER: sbar
+      POSTGRES_PASSWORD: sbar
+    ports:
+      - "5432:5432"
+    volumes:
+      - sbar-db-dev-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sbar -d sbar"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  sbar-db-dev-data:
