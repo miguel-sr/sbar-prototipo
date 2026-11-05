@@ -1,6 +1,6 @@
 # O Método SBAR — Visão Conceitual
 
-> Fonte: o TCC II revisado (TCC revisado, 2026-10-21), capítulos 3, 4 e 5. Este documento explica o **raciocínio** do método; as fórmulas exatas estão em [`formulas-metricas.md`](./formulas-metricas.md) e os números de referência (para testes) em [`estudos-de-caso.md`](./estudos-de-caso.md).
+> Fonte: `docs/fontes/TCC.pdf` (TCC revisado, 2026-10-21), capítulos 3, 4 e 5. Este documento explica o **raciocínio** do método; as fórmulas exatas estão em [`formulas-metricas.md`](./formulas-metricas.md) e os números de referência (para testes) em [`estudos-de-caso.md`](./estudos-de-caso.md).
 >
 > **Mudanças em relação ao TCC anterior**: o enquadramento passou de "recomendação arquitetural preliminar" para **subsídio estruturado à decisão do arquiteto**; `cluster(v)` agora é **comunidade estrutural por modularidade** (a limitação antes registrada na seção 7 está resolvida); os **fluxos principais** são entrada (cadastrados e validados); os **perfis de referência** foram publicados (Quadro 8); e há uma Engenharia de Requisitos do protótipo (seção 5.3) e um protocolo de avaliação com especialistas (seção 5.4).
 
@@ -18,7 +18,7 @@ de referência → Perfil de referência mais próximo (subsídio à decisão)
 
 O SBAR **não** substitui o julgamento do arquiteto, **não** gera código-fonte, **não** avalia segurança de infraestrutura e **não** resolve dívida técnica preexistente (TCC seção 5.1). Ele produz um subsídio estruturado e **rastreável**.
 
-O método é construído segundo a **Design Science Research** (Peffers et al., 2007; TCC 3.2, Quadro 3). Sob a ótica da Engenharia de Requisitos, o próprio SBAR é um procedimento de elicitação e análise de **requisitos arquiteturalmente significativos** a partir do Blueprint (TCC 1 e 2.2, Quadro 1): a necessidade de resposta imediata em uma etapa, a dependência de sistemas externos, a concentração de operações num repositório ou a existência de processos que toleram atraso.
+O método é construído segundo a **Design Science Research** (Peffers et al., 2007; TCC 3.2, Quadro 2). Sob a ótica da Engenharia de Requisitos, o próprio SBAR é um procedimento de elicitação e análise de **requisitos arquiteturalmente significativos** a partir do Blueprint (TCC 1 e 2.2, Quadro 1): a necessidade de resposta imediata em uma etapa, a dependência de sistemas externos, a concentração de operações num repositório ou a existência de processos que toleram atraso.
 
 ## 2. Visão de produto (o que o usuário faz no sistema)
 
@@ -38,7 +38,7 @@ O usuário informa os dados do fluxo de negócio do próprio sistema/serviço qu
 | **Suporte** | Processos/mecanismos transversais (reutilizados por múltiplos fluxos) + repositórios de estado/dados. |
 | **Externo** | Sistemas, serviços, fornecedores ou parceiros de terceiros. |
 
-### 3.2 Taxonomia formal dos nós (Quadro 5 do TCC)
+### 3.2 Taxonomia formal dos nós (Quadro 4 do TCC)
 
 Cada nó é a tupla `v = (id, tipo, banda, carga, gargalo)`:
 
@@ -53,9 +53,9 @@ Cada nó é a tupla `v = (id, tipo, banda, carga, gargalo)`:
 
 Cada nó pertence a **exatamente uma banda** (RN01).
 
-### 3.3 Arestas (Quadro 4 do TCC)
+### 3.3 Arestas (Quadro 3 do TCC)
 
-Cada aresta é a tupla `e = (u, v, tipo, w)`, com `tipo ∈ {SYN, ASY, CRI, BAT}` e `w ∈ {1, 2, 3}` (RN02), mais uma **justificativa rastreável ao Blueprint** (RN03 — campo `justificativa` obrigatório no protótipo).
+Cada aresta é a tupla `e = (u, v, tipo, w)`, com `tipo ∈ {SYN, ASY, CRI, BAT}` e `w ∈ {1, 2, 3}` (RN02), mais uma **justificativa rastreável ao Blueprint** (RN03 — campo `justificativa` obrigatório no protótipo desde a Etapa 9, DV-05 fechada).
 
 ### 3.4 Atributos derivados
 
@@ -79,7 +79,7 @@ Esta é a transformação que precisa virar lógica de validação/inferência n
 
 ## 5. Das métricas ao perfil de referência mais próximo
 
-O Quadro 9 do TCC consolida o fluxo operacional em 10 etapas (1–7 são a construção do Mapa acima):
+O Quadro 8 do TCC consolida o fluxo operacional em 10 etapas (1–7 são a construção do Mapa acima):
 
 | Etapa | Entrada | Processamento | Saída |
 |---|---|---|---|
@@ -90,9 +90,9 @@ O Quadro 9 do TCC consolida o fluxo operacional em 10 etapas (1–7 são a const
 Em detalhe:
 
 1. Identificar as comunidades (`Q` registrado) e calcular as 10 métricas brutas (fórmulas exatas em `formulas-metricas.md`), indicando as que forem "não aplicáveis".
-2. Normalizar cada uma para escala 0–5 usando os limites min/max do **Quadro 7** (também em `formulas-metricas.md`).
+2. Normalizar cada uma para escala 0–5 usando os limites min/max do **Quadro 6** (também em `formulas-metricas.md`).
 3. Montar o vetor `P_servico = (Norm_1, ..., Norm_10)` — o perfil comportamental do serviço (Radar).
-4. Comparar `P_servico` com cada assinatura de referência (Quadro 8: Monólito Modular, Microsserviços) via distância euclidiana ponderada (`p_i = 0,1`), exibindo a **contribuição de cada eixo**.
+4. Comparar `P_servico` com cada assinatura de referência (Quadro 7: Monólito Modular, Microsserviços) via distância euclidiana ponderada (`p_i = 0,1`), exibindo a **contribuição de cada eixo**.
 5. O estilo com **menor distância** é o perfil de referência mais próximo. Ler também a **margem** entre as distâncias e a distância como percentual do máximo (5): margem pequena (CE2: 0,239, ≈ 4,8% da escala) indica perfil intermediário, em que a comparação pouco diferencia os estilos e a análise do arquiteto pesa mais. O resultado é sempre apresentado como subsídio **preliminar/demonstrativo**, com aviso de que não substitui a análise do arquiteto (RN09), nunca como resposta definitiva.
 
 ## 6. Rastreabilidade (requisito não funcional obrigatório)
@@ -104,15 +104,15 @@ elemento do Service Blueprint → nó/aresta do Mapa → métrica → eixo do Ra
 comparação arquitetural → perfil de referência mais próximo
 ```
 
-Para isso, o sistema precisa **registrar** (não apenas calcular e descartar): elementos identificados, classificação de nós e arestas, pesos atribuídos, divergências/ajustes e critérios de resolução, valores de métricas, limites de normalização usados, assinaturas arquiteturais empregadas, distâncias calculadas — e, agora, a **partição em comunidades e o `Q`**. Isso é o que sustenta a Matriz de Rastreabilidade (Quadros 28 e 38 do TCC: elemento do Blueprint com a etapa, nó/aresta, métrica, eixos, contribuição) e a reprodutibilidade da aplicação (RNF02), permitindo que analistas diferentes comparem resultados a partir dos mesmos dados e critérios.
+Para isso, o sistema precisa **registrar** (não apenas calcular e descartar): elementos identificados, classificação de nós e arestas, pesos atribuídos, divergências/ajustes e critérios de resolução, valores de métricas, limites de normalização usados, assinaturas arquiteturais empregadas, distâncias calculadas — e, agora, a **partição em comunidades e o `Q`**. Isso é o que sustenta a Matriz de Rastreabilidade (Quadros 28 e 36 do TCC: elemento do Blueprint com a etapa, nó/aresta, métrica, eixos, contribuição) e a reprodutibilidade da aplicação (RNF02), permitindo que analistas diferentes comparem resultados a partir dos mesmos dados e critérios.
 
 ## 7. Limitação conhecida do método — RESOLVIDA no TCC revisado (histórico e riscos remanescentes)
 
-**O que era**: a primeira versão definia `cluster(v)` pela conectividade fraca do grafo. Isso não era só uma limitação "observada" nos estudos de caso — era uma **tautologia matemática**: como qualquer aresta entre dois nós já os coloca no mesmo componente, é logicamente impossível existir aresta "para fora" de um cluster; logo `FLEX` e `AUT` valiam **sempre** 5,00 para qualquer grafo, e uma análise de sensibilidade mostrou que retirar os dois eixos **invertia** o perfil mais próximo (de Microsserviços para Monólito Modular).
+**O que era**: a primeira versão definia `cluster(v)` pela conectividade fraca do grafo. Isso não era só uma limitação "observada" nos estudos de caso — era uma **tautologia matemática**, provada em [`analise-critica.md`](./analise-critica.md) (Achado 1): como qualquer aresta entre dois nós já os coloca no mesmo componente, é logicamente impossível existir aresta "para fora" de um cluster; logo `FLEX` e `AUT` valiam **sempre** 5,00 para qualquer grafo, e uma análise de sensibilidade mostrou que retirar os dois eixos **invertia** o perfil mais próximo (de Microsserviços para Monólito Modular).
 
 **O que o TCC fez**: o ciclo da DSR (TCC 3.2) levou a demonstração de volta ao projeto, e a definição foi **substituída pela detecção de comunidades por modularidade** (seção 4.4.1). Os resultados das **duas versões** ficam registrados nos Capítulos 6 e 7 (CE1: FLEX/AUT de 5,00 → 3,50/1,67; CE2: 5,00 → 2,76/2,50). Após a revisão, FLEX e AUT respondem por 40,2% (CE1) e 31,3% (CE2) da soma dos termos da distância até o Monólito Modular — antes 81,0% e 77,1% — e o perfil mais próximo é o mesmo com os dez eixos e com os oito restantes. Débito **D7 resolvido** pelo TCC (a proposta anterior do projeto, limiar de intensidade de aresta, não foi a adotada).
 
-**Riscos que permanecem** (detalhes em `formulas-metricas.md`, "Casos-limite"):
+**Riscos que permanecem** (detalhes e provas em `analise-critica.md`, Achados 8 a 10, e em `formulas-metricas.md`, "Casos-limite"):
 - o CNM guloso **depende do desempate** quando há empate de ganho de modularidade, e a partição pode mudar (D9); por isso partição e `Q` precisam ser registrados;
 - grafos muito centralizados podem resultar em **uma comunidade só** (FLEX = AUT = 1 de novo);
 - a modularidade tem **limite de resolução**, pois funde comunidades pequenas e densas;
@@ -124,4 +124,4 @@ O protótipo web que operacionaliza o método tem requisitos especificados e val
 
 ## 9. Avaliação com especialistas (TCC 5.4) — resumo
 
-Três objetivos: verificar clareza e utilidade do método; comparar as saídas do SBAR com a análise independente de profissionais; validar as assinaturas de referência. Participantes: no mínimo 5 profissionais de desenvolvimento/arquitetura com pelo menos 2 anos de experiência. Três etapas: (a) análise independente de um estudo de caso, sem ver o SBAR, indicando o estilo mais adequado; (b) avaliação do método (Mapa, Radar, distâncias, matriz) em escala Likert de 5 pontos — clareza, consistência, rastreabilidade, pontos críticos, utilidade; (c) atribuição de valores 0–5 aos dez eixos de cada estilo. Análise: mediana e proporção de respostas 4–5; **concordância** (% de participantes cuja indicação coincide com o perfil mais próximo do SBAR); assinaturas revisadas pela mediana, com eixos de grande dispersão registrados como incerteza; a versão revisada é reaplicada aos dois estudos e as diferenças são registradas (rastreabilidade 4.6.1). O cronograma do TCC (Quadro 17) prevê a aplicação em 10/10/2026 e a análise dos resultados em 24/10/2026; o andamento real não está registrado neste repositório.
+Três objetivos: verificar clareza e utilidade do método; comparar as saídas do SBAR com a análise independente de profissionais; validar as assinaturas de referência. Participantes: no mínimo 5 profissionais de desenvolvimento/arquitetura com pelo menos 2 anos de experiência. Três etapas: (a) análise independente de um estudo de caso, sem ver o SBAR, indicando o estilo mais adequado; (b) avaliação do método (Mapa, Radar, distâncias, matriz) em escala Likert de 5 pontos — clareza, consistência, rastreabilidade, pontos críticos, utilidade; (c) atribuição de valores 0–5 aos dez eixos de cada estilo. Análise: mediana e proporção de respostas 4–5; **concordância** (% de participantes cuja indicação coincide com o perfil mais próximo do SBAR); assinaturas revisadas pela mediana, com eixos de grande dispersão registrados como incerteza; a versão revisada é reaplicada aos **três** estudos e as diferenças são registradas (rastreabilidade 4.6.1). **Situação (TCC de 2026-11-06, 5.4.1 e 9.7):** aplicada de 10/10 a 24/10/2026 por formulário on-line, com seis profissionais (3 a 12 anos de experiência), todos sobre o Estudo de Caso 2. Concordância de 66,7% (4 de 6) entre a indicação independente e o perfil mais próximo do SBAR; mediana 4,5 em rastreabilidade e 3,0 em utilidade; as assinaturas revisadas (Quadro 53) mantêm Monólito Modular nos Estudos de Caso 1 e 2 e invertem o 3 para Monólito Modular. RNF04 segue só parcialmente verificado. O cronograma do TCC II (Quadro 17 do `TCC_II.pdf`) foi removido do TCC atual.

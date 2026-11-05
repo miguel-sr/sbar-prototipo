@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Sbar.Application.Tests.Comparacao;
 
-// RF09/RN09 — o perfil mais próximo e a margem entre as distâncias (subsídio à decisão, TCC 4.6 e 7.10.1).
+// RF09/RN09 — o perfil mais próximo e a margem entre as distâncias (subsídio à decisão, TCC 4.6 e 7.5).
 public class GeradorDeRecomendacaoTests
 {
     private static DistanciaPerfil Distancia(string nome, double distancia) =>
@@ -28,7 +28,7 @@ public class GeradorDeRecomendacaoTests
     {
         var recomendacao = GeradorDeRecomendacao.Gerar([Distancia("A", 1.146), Distancia("B", 1.321), Distancia("C", 3.0)]);
 
-        recomendacao.Margem.Should().BeApproximately(0.175, 1e-9); // Estudo de Caso 2 (TCC 7.10.1): 3,5% da escala
+        recomendacao.Margem.Should().BeApproximately(0.175, 1e-9); // Estudo de Caso 2 (TCC 7.5): 3,5% da escala
     }
 
     [Fact]

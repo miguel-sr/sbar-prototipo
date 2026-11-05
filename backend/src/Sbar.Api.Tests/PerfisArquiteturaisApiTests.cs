@@ -41,7 +41,7 @@ public class PerfisArquiteturaisApiTests : IAsyncLifetime
         (await _client.GetFromJsonAsync<PerfilArquiteturalDto>($"/api/perfis-arquiteturais/{criado.Id}", JsonTestOptions.Padrao))
             .Should().BeEquivalentTo(criado);
         var lista = (await _client.GetFromJsonAsync<List<PerfilArquiteturalDto>>("/api/perfis-arquiteturais", JsonTestOptions.Padrao))!;
-        lista.Select(p => p.Nome).Should().Contain("Serverless").And.Contain(n => n.StartsWith("Monólito")); // junto com o seed do Quadro 8
+        lista.Select(p => p.Nome).Should().Contain("Serverless").And.Contain(n => n.StartsWith("Monólito")); // junto com o seed do Quadro 7
 
         var atualizacao = await _client.PutAsJsonAsync($"/api/perfis-arquiteturais/{criado.Id}", Perfil("Serverless v2", 4), JsonTestOptions.Padrao);
         atualizacao.StatusCode.Should().Be(HttpStatusCode.OK);

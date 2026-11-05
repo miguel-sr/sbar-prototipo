@@ -13,7 +13,7 @@ import { expect, test } from '../support/fixtures';
 test('Exportar JSON e CSV na Matriz baixa os arquivos reais com os resultados do CE2', async ({ page, request, prefixo }) => {
   const caso = await criarCaso(request, `${prefixo} Clínica exportação`);
   await cadastrarClinicaPelaApi(request, caso.id);
-  // (o Paciente é o 1º nó criado pela fixture — mesma ordem do Quadro 31; a numeração C1…C4 das comunidades segue essa ordem)
+  // (o Paciente é o 1º nó criado pela fixture — mesma ordem do Quadro 57; a numeração C1…C4 das comunidades segue essa ordem)
   await page.goto(`/casos/${caso.id}/rastreabilidade`);
   await expect(page.getByRole('button', { name: 'Exportar CSV' })).toBeEnabled();
 

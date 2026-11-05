@@ -1,19 +1,19 @@
 import { expect, test } from '../support/fixtures';
 
 // POR QUE É E2E: a tela de Parâmetros é preenchida com o que a API REAL devolve — a versão vigente
-// (criada sob demanda), os limites/pesos do seed (Quadro 7, p_i = 0,1) e as assinaturas do
-// Quadro 8 que a MIGRATION de seed grava. Nenhum teste de componente vê migration → API → tela.
+// (criada sob demanda), os limites/pesos do seed (Quadro 6, p_i = 0,1) e as assinaturas do
+// Quadro 7 que a MIGRATION de seed grava. Nenhum teste de componente vê migration → API → tela.
 // O bloqueio de Σ pesos ≠ 1 (RN07, CT10) é só conferido em cima desses dados reais; a regra em si
 // está testada no backend e em componente. NÃO SALVA nada: parâmetros e perfis são GLOBAIS (um
 // salvamento criaria uma versão que vazaria para os outros testes e para o banco do E2E).
 
-test('Parâmetros: mostra a versão vigente e as assinaturas do Quadro 8; soma dos pesos ≠ 1 bloqueia o salvar', async ({ page }) => {
+test('Parâmetros: mostra a versão vigente e as assinaturas do Quadro 7; soma dos pesos ≠ 1 bloqueia o salvar', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('link', { name: 'Parâmetros' }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'Parâmetros do cálculo' })).toBeVisible();
   await expect(page.getByTestId('versao-exibida')).toContainText(/Versão vigente: \d+/);
 
-  await test.step('as assinaturas vêm do seed do Quadro 8 (provisórias; VOL de Microsserviços = 2,0)', async () => {
+  await test.step('as assinaturas vêm do seed do Quadro 7 (provisórias; VOL de Microsserviços = 2,0)', async () => {
     const assinaturas = page.getByRole('table', { name: 'Assinaturas de referência' });
     // colunas: perfil, CO, ESC, INT, UX, DISP, FLEX, TR, AUT, VOL (índice 9), DEP
     await expect(assinaturas.getByRole('row', { name: /^Monólito Modular \(provisório\)/ }).getByRole('cell').nth(9)).toHaveText('3,0');

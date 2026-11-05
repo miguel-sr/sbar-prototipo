@@ -1,14 +1,14 @@
 # Guia de Integração da API — para o Front-end
 
-> Referência completa de como consumir a API do SBAR: convenções gerais, o fluxo de telas recomendado (POP-09) e o contrato exato (request/response/erros) de cada rota. Para entender **por dentro** o que cada rota faz (camadas, classes, fórmulas), veja [`ARQUITETURA.md`](./ARQUITETURA.md) — este documento aqui é só o **contrato externo**, escrito para quem vai chamar a API, não para quem vai mexer no backend.
+> Referência completa de como consumir a API do SBAR: convenções gerais, o fluxo de telas recomendado (POP-09) e o contrato exato (request/response/erros) de cada rota. Para entender **por dentro** o que cada rota faz (camadas, classes, fórmulas), veja `ARQUITETURA.md` e `FLUXO_E_STATUS.md` — este documento aqui é só o **contrato externo**, escrito para quem vai chamar a API, não para quem vai mexer no backend.
 >
-> **Este documento descreve a API como ela está hoje:** login por cookie de sessão, justificativa da aresta, fluxos principais, comunidades e `Q`, contribuição por eixo, parâmetros versionados, matriz derivada das fórmulas e exportação. Os nomes `recomendacao`/`estiloRecomendado` foram **mantidos** (D14), embora a saída seja o "perfil de referência mais próximo" (um subsídio à decisão).
+> **Este documento descreve a API REAL, como ela está hoje** (Etapa 9 implementada em 2026-10-22, conforme o TCC revisado — `docs/fontes/TCC.pdf`): justificativa da aresta, fluxos principais, comunidades e `Q`, contribuição por eixo, parâmetros versionados, matriz derivada das fórmulas e exportação. Os nomes `recomendacao`/`estiloRecomendado` foram **mantidos** (D14, opção 1), embora a saída seja, no TCC revisado, o "perfil de referência mais próximo" (um subsídio à decisão).
 >
 > A mesma informação também está disponível interativa, com "Try it out", em `/swagger` (Swagger UI) sempre que a API estiver rodando — inclusive em produção, não só em desenvolvimento (decisão registrada em `ARQUITETURA.md`).
 
 ## 1. Convenções gerais
 
-- **Exige login.** A sessão é um cookie `HttpOnly` (`sbar.sessao`) emitido por `POST /api/account/login` ou `register`; o navegador o reenvia sozinho (o front e a API parecem a mesma origem pelo proxy da Vercel). Sem sessão, toda rota fora de `/api/account/*` responde **401**. Cada conta enxerga só os seus Estudos de Caso, parâmetros e perfis: o recurso de outra conta responde **404**, nunca 403 (decisão D4; seção 2.1).
+- **Exige login.** A sessão é um cookie `HttpOnly` (`sbar.sessao`) emitido por `POST /api/account/login` ou `register`; o navegador o reenvia sozinho (o front e a API parecem a mesma origem pelo proxy da Vercel). Sem sessão, toda rota fora de `/api/account/*` responde **401**. Cada conta enxerga só os seus Estudos de Caso, parâmetros e perfis: o recurso de outra conta responde **404**, nunca 403 (decisão D4 revista em 2026-10-30; seção 2.1).
 - **Tudo é síncrono.** Cada chamada calcula e responde na hora — não existe fila, job em background nem estado "processando".
 - **`Content-Type: application/json`** em todo `POST`/`PUT` com corpo.
 - **Nomes de campo em `camelCase`** no JSON (tanto request quanto response), mesmo as classes C# usando PascalCase internamente — é a convenção padrão do ASP.NET Core. Ex.: a classe `CriarNoRequest(string Nome, TipoDeNo Tipo)` vira `{"nome": "...", "tipo": "..."}` no JSON.
@@ -77,7 +77,7 @@ T3 a T8 (incluindo os fluxos) não são um wizard bloqueante: o usuário pode vo
 | `POST /api/account/logout` | — | **204** |
 | `GET /api/account/me` | — | **200** `{ id, email }` ou **401** (o front consulta ao abrir) |
 
-O cadastro exige o **código de convite** configurado em `Sbar__CodigoDeConvite`. Quem se cadastra com o e-mail de `Sbar__EmailDoDonoDoLegado` recebe os Estudos de Caso, parâmetros, perfis e versões publicados antes das contas (sem dono). Conta nova recebe uma cópia dos padrões do Quadro 7 e do Quadro 8 na primeira leitura de parâmetros ou perfis. Cada conta pode ter até **20** Estudos de Caso (**422** ao exceder). Não há recuperação de senha nem confirmação de e-mail nesta versão.
+O cadastro exige o **código de convite** configurado em `Sbar__CodigoDeConvite`. Quem se cadastra com o e-mail de `Sbar__EmailDoDonoDoLegado` recebe os Estudos de Caso, parâmetros, perfis e versões publicados antes das contas (sem dono). Conta nova recebe uma cópia dos padrões do Quadro 6 e do Quadro 7 na primeira leitura de parâmetros ou perfis. Cada conta pode ter até **20** Estudos de Caso (**422** ao exceder). Não há recuperação de senha nem confirmação de e-mail nesta versão.
 
 ## 3. Estudos de Caso — `/api/casos`
 
@@ -260,6 +260,8 @@ Response `200 OK` (valores do Estudo de Caso 1 do TCC revisado; listas abreviada
     "estiloRecomendado": "Monólito Modular (provisório)",
     "margem": 0.4712,
     "distanciaMaxima": 5.0,
+    "pesosEfetivos": [ { "eixo": "CO", "pesoConfigurado": 0.1, "pesoEfetivo": 0.1 }, { "eixo": "ESC", "pesoConfigurado": 0.1, "pesoEfetivo": 0.1 } ],
+    "eixosOmitidos": [],
     "distancias": [
       {
         "perfilId": "00000000-0000-0000-0000-000000000001", "perfilNome": "Monólito Modular (provisório)",
@@ -284,7 +286,7 @@ Response `200 OK` (valores do Estudo de Caso 1 do TCC revisado; listas abreviada
 - `fluxos`: resumo dos fluxos cadastrados (os válidos alimentam o DEP).
 - `versaoDosParametros`: versão dos limites, pesos e assinaturas usada (RF11, US06).
 - `recomendacao` vem `null` quando não há nenhum Perfil Arquitetural cadastrado. É o **perfil de referência mais próximo** — um **subsídio** à decisão do arquiteto, nunca uma decisão (TCC 4.6, RN09); a tela deve trazer o aviso de que não substitui a análise do arquiteto. Os nomes `recomendacao`/`estiloRecomendado` foram **mantidos** por compatibilidade (decisão D14, opção 1).
-  - `distancias[].percentualDoMaximo` = distância ÷ 5 × 100 (a distância máxima possível é 5); `distancias[].contribuicoes[]` = `p_i·(Norm_i do serviço − Norm_i do perfil)²` por eixo aplicável, **sem arredondar** (Σ = distância², Quadros 26/36); `margem` = segunda menor distância − menor (`null` com menos de 2 perfis; margem pequena indica perfil intermediário); `distanciaMaxima` = 5.
+  - `distancias[].percentualDoMaximo` = distância ÷ 5 × 100 (a distância máxima possível é 5); `distancias[].contribuicoes[]` = `p'_i·(Norm_i do serviço − Norm_i do perfil)²` por eixo aplicável (`p'_i` = peso efetivo), **sem arredondar** (Σ = distância², Quadros 26/34); `margem` = segunda menor distância − menor (`null` com menos de 2 perfis; margem pequena indica perfil intermediário); `distanciaMaxima` = 5. `pesosEfetivos[]` traz, para cada eixo aplicável, o peso configurado e o **efetivo** (`p'_i = p_i ÷ Σ p_j` entre os eixos aplicáveis; RN07/RN08, DV-11) e `eixosOmitidos[]` lista os eixos "não aplicável" que ficaram fora da distância; com os dez eixos aplicáveis, os pesos efetivos são os configurados e `eixosOmitidos` é vazio. Se nenhum eixo aplicável tiver peso, `recomendacao` é `null` e `avisos` explica; se algum eixo for omitido, `avisos` traz uma mensagem ("…renormalizados para somar 1"). A exportação CSV ganha a seção "Pesos efetivos".
 
 Erros: `404` se `casoId` ou a versão `N` não existirem; **`422`** se a soma dos pesos usada ≠ 1 (cálculo bloqueado — RN07, CT10).
 
@@ -316,7 +318,7 @@ Derivada a cada leitura **das mesmas definições das calculadoras de eixo** (na
 
 ## 9. Perfis Arquiteturais — `/api/perfis-arquiteturais`
 
-CRUD completo, não vinculado a nenhum Estudo de Caso — são as **assinaturas de referência** usadas por `/metricas`. Já vem semeado com as duas assinaturas **provisórias** do TCC revisado (Quadro 8: "Monólito Modular (provisório)" e "Microsserviços (provisório)"; Microsserviços com VOL = 2,0), editáveis livremente. **Toda criação, atualização ou remoção de perfil gera uma nova versão dos parâmetros** (seção 10).
+CRUD completo, não vinculado a nenhum Estudo de Caso — são as **assinaturas de referência** usadas por `/metricas`. Já vem semeado com as duas assinaturas **provisórias** do TCC revisado (Quadro 7: "Monólito Modular (provisório)" e "Microsserviços (provisório)"; Microsserviços com VOL = 2,0), editáveis livremente. **Toda criação, atualização ou remoção de perfil gera uma nova versão dos parâmetros** (seção 10).
 
 ### `POST /api/perfis-arquiteturais` — criar
 
@@ -349,7 +351,7 @@ Response `204 No Content`. `404` se não existir. Depois de removido, esse perfi
 
 ## 10. Parâmetros de análise e versões — `/api/parametros`
 
-Os **parâmetros** são os limites de normalização (Quadro 7), os pesos `p_i` e as assinaturas de referência (Quadro 8). O **estado vigente** fica nas tabelas de configuração e dos Perfis; **cada alteração grava um snapshot imutável** (numeração 1, 2, 3…, sequencial mesmo com chamadas concorrentes), e cada análise informa a versão usada (`versaoDosParametros` em `/metricas` e na exportação). A versão 1 é criada sob demanda, a partir do estado vigente. Valores do cálculo reaplicáveis com `GET /metricas?versao=N`.
+Os **parâmetros** são os limites de normalização (Quadro 6), os pesos `p_i` e as assinaturas de referência (Quadro 7). O **estado vigente** fica nas tabelas de configuração e dos Perfis; **cada alteração grava um snapshot imutável** (numeração 1, 2, 3…, sequencial mesmo com chamadas concorrentes), e cada análise informa a versão usada (`versaoDosParametros` em `/metricas` e na exportação). A versão 1 é criada sob demanda, a partir do estado vigente. Valores do cálculo reaplicáveis com `GET /metricas?versao=N`.
 
 ### `GET /api/parametros` — listar as versões
 

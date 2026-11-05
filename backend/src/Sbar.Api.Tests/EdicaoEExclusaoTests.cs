@@ -248,7 +248,7 @@ public class EdicaoEExclusaoTests : IAsyncLifetime
         (await _client.DeleteAsync($"/api/casos/{caso.Id}/arestas/{aresta.Id}")).StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
-    // ----- nosGargalo e matriz (Estudo de Caso 2 — Quadros 14/15/16/19) -----
+    // ----- nosGargalo e matriz (Estudo de Caso 2 — Quadros 31 e 36) -----
 
     private async Task<(Guid CasoId, Dictionary<string, Guid> Nos)> CriarEstudoDeCaso2Async()
     {
@@ -305,7 +305,7 @@ public class EdicaoEExclusaoTests : IAsyncLifetime
 
         var metricas = await _client.GetFromJsonAsync<ResultadoDeMetricasDto>($"/api/casos/{casoId}/metricas", JsonTestOptions.Padrao);
 
-        // Quadro 33 do TCC revisado (Estudo de Caso 2): TP2 (Frontstage), P2 (Backstage) e DS (Suporte)
+        // Quadro 31 do TCC revisado (Estudo de Caso 2): TP2 (Frontstage), P2 (Backstage) e DS (Suporte)
         metricas!.NosGargalo.Should().BeEquivalentTo(new[] { nos["TP2"], nos["P2"], nos["DS"] });
     }
 

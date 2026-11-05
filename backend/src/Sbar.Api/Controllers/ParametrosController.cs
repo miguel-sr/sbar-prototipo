@@ -6,8 +6,8 @@ using Sbar.Domain.Interfaces.Services;
 namespace Sbar.Api.Controllers;
 
 /// <summary>
-/// Parâmetros de análise versionados (RF11, US06): limites de normalização (Quadro 7), pesos p_i dos eixos e assinaturas de
-/// referência (Quadro 8). Cada alteração — aqui ou em <c>/api/perfis-arquiteturais</c> — grava uma nova versão imutável; cada
+/// Parâmetros de análise versionados (RF11, US06): limites de normalização (Quadro 6), pesos p_i dos eixos e assinaturas de
+/// referência (Quadro 7). Cada alteração — aqui ou em <c>/api/perfis-arquiteturais</c> — grava uma nova versão imutável; cada
 /// análise informa a versão usada e uma versão antiga pode ser reaplicada com <c>?versao=N</c> em <c>/metricas</c>.
 /// </summary>
 [ApiController]

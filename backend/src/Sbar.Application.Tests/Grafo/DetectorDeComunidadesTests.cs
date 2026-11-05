@@ -5,8 +5,8 @@ using Xunit;
 
 namespace Sbar.Application.Tests.Grafo;
 
-// CT02 (TCC revisado, Quadro 15) e seção 4.4.1: detecção de comunidades por modularidade (CNM guloso).
-// Oráculo: partições e Q de docs/dominio/estudos-de-caso.md (Quadros 24 e 34 do TCC de 2026-10-25). O TCC explora, a cada passo,
+// CT02 (TCC revisado, Quadro 14) e seção 4.4.1: detecção de comunidades por modularidade (CNM guloso).
+// Oráculo: partições e Q de docs/dominio/estudos-de-caso.md (Quadros 24 e 32 do TCC de 2026-10-25). O TCC explora, a cada passo,
 // TODAS as fusões empatadas e adota, entre as divisões finais, a de maior Q — por isso o resultado não depende da ordem de cadastro.
 public class DetectorDeComunidadesTests
 {

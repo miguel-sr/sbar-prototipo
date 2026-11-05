@@ -7,7 +7,7 @@ using Sbar.Domain.ValueObjects;
 
 namespace Sbar.Application.CasosDeUso;
 
-// RF-08 — CRUD de Perfis Arquiteturais de referência (assinaturas, Quadro 8). RF11/US06: toda alteração grava uma nova
+// RF-08 — CRUD de Perfis Arquiteturais de referência (assinaturas, Quadro 7). RF11/US06: toda alteração grava uma nova
 // versão dos parâmetros (limites + pesos + assinaturas) na mesma transação; a versão 1 (estado anterior) é garantida
 // antes da primeira alteração.
 public class ServicoDePerfis(
@@ -37,7 +37,7 @@ public class ServicoDePerfis(
             ?? throw new RecursoNaoEncontradoException(nameof(PerfilArquitetural), id);
     }
 
-    // Conta nova: os padrões do Quadro 8 são copiados para o usuário na primeira leitura.
+    // Conta nova: os padrões do Quadro 7 são copiados para o usuário na primeira leitura.
     public async Task<IReadOnlyList<PerfilArquitetural>> ListarAsync()
     {
         await parametros.GarantirVersaoInicialAsync();

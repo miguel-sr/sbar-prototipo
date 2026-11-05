@@ -8,7 +8,7 @@ using Xunit.Abstractions;
 
 namespace Sbar.Api.Tests;
 
-// RNF05 (TCC 5.3.4, Quadro 12): "os cálculos de um Mapa com até 50 nós devem ser concluídos em até 2 segundos". Mede a chamada
+// RNF05 (TCC 5.3.4, Quadro 11): "os cálculos de um Mapa com até 50 nós devem ser concluídos em até 2 segundos". Mede a chamada
 // real de métricas (HTTP → serviços → EF Core → Postgres → CNM → dez eixos → distâncias) com um Mapa sintético de 50 nós, todas as
 // bandas e densidade parecida com a dos estudos de caso (≈ 1,4 aresta por nó). A primeira execução (aquecimento do JIT e do
 // EF) é descartada: o limite vale a partir da segunda. O tempo medido é registrado na saída do teste.

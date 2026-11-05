@@ -6,7 +6,7 @@ using Sbar.Domain.Services;
 
 namespace Sbar.Application.Rastreabilidade;
 
-// RF12 — Matriz de Rastreabilidade (TCC seção 4.6.1; exemplos nos Quadros 28 e 38): relaciona elemento do Blueprint → nó/aresta
+// RF12 — Matriz de Rastreabilidade (TCC seção 4.6.1; exemplos nos Quadros 28 e 36): relaciona elemento do Blueprint → nó/aresta
 // → métrica → eixo do Radar → como contribuiu. O TCC não define um algoritmo para "gerar" a matriz (os quadros são linhas
 // escolhidas à mão); a leitura adotada aqui deriva as linhas das MESMAS definições das calculadoras de eixo, para que cada
 // eixo liste os nós e arestas que de fato contribuíram (US07):

@@ -13,7 +13,7 @@ public class ConfiguracaoDeEixoConfiguration : IEntityTypeConfiguration<Configur
         builder.Property(c => c.Id).ValueGeneratedNever();
         builder.Property(c => c.Eixo).HasConversion<string>();
 
-        // Uma configuração por eixo e por usuário. Os padrões do Quadro 7 vivem em código (PadroesDoSistema) e são
+        // Uma configuração por eixo e por usuário. Os padrões do Quadro 6 vivem em código (PadroesDoSistema) e são
         // copiados para cada conta; as linhas sem dono são o legado anterior às contas.
         builder.HasIndex(c => new { c.DonoId, c.Eixo }).IsUnique();
     }

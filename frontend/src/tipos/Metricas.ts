@@ -13,7 +13,7 @@ export interface EixoResultado {
   motivo: string | null;
 }
 
-/** Contribuição de um eixo para a distância: p_i · (Norm_i do serviço − Norm_i do perfil)² (Quadros 26/36). */
+/** Contribuição de um eixo para a distância: p_i · (Norm_i do serviço − Norm_i do perfil)² (Quadros 26/34). */
 export interface ContribuicaoDoEixo {
   eixo: Eixo;
   contribuicao: number;
@@ -40,6 +40,17 @@ export interface Recomendacao {
   margem: number | null;
   /** Distância máxima possível (5). */
   distanciaMaxima: number;
+  /** Pesos p'_i usados na distância: os configurados dos eixos aplicáveis, renormalizados para somar 1 (RN07/RN08). */
+  pesosEfetivos: PesoEfetivoDoEixo[];
+  /** Eixos "não aplicável" que ficaram fora da distância (vazio quando os dez eixos são aplicáveis). */
+  eixosOmitidos: string[];
+}
+
+/** Peso de um eixo na distância: o configurado e o efetivo (renormalizado entre os eixos aplicáveis). */
+export interface PesoEfetivoDoEixo {
+  eixo: string;
+  pesoConfigurado: number;
+  pesoEfetivo: number;
 }
 
 /** Uma comunidade estrutural (TCC 4.4.1): índice 1…n, Nós e arestas que saem para outras comunidades. */

@@ -12,7 +12,7 @@ namespace Sbar.Api.Extensions;
 
 public static class ContasDeUsuarioExtension
 {
-    // Identity com cookie HttpOnly, chaves do Data Protection no banco, política
+    // PLANO_CONTAS_DE_USUARIO.md 4.1: Identity com cookie HttpOnly, chaves do Data Protection no banco, política
     // padrão exigindo login em todo controller e limite de taxa nas rotas de conta.
     public static IServiceCollection AddContasDeUsuario(this IServiceCollection services, IConfiguration config)
     {

@@ -30,7 +30,7 @@ public class ParametrosEVersoesTests : IAsyncLifetime
 
     public Task DisposeAsync() => _api.DisposeAsync().AsTask();
 
-    // Limites do Quadro 7 e pesos iguais (p_i = 0,1) — o estado semeado pela migration.
+    // Limites do Quadro 6 e pesos iguais (p_i = 0,1) — o estado semeado pela migration.
     private static List<ParametroDeEixoRequest> EixosDoQuadro7(double maximoDeCo = 40, double pesoDeCo = 0.1, double pesoDeDep = 0.1) =>
     [
         new(Eixo.CO, 6, maximoDeCo, pesoDeCo), new(Eixo.ESC, 0, 1, 0.1), new(Eixo.INT, 0, 1, 0.1), new(Eixo.UX, 0, 3, 0.1),
@@ -78,7 +78,7 @@ public class ParametrosEVersoesTests : IAsyncLifetime
         atual.Assinaturas.Select(a => a.Nome).Should().BeEquivalentTo("Monólito Modular (provisório)", "Microsserviços (provisório)");
         var microsservicos = atual.Assinaturas.Single(a => a.Nome.StartsWith("Microsserviços"));
         microsservicos.Valores.Should().HaveCount(10);
-        microsservicos.Valores["VOL"].Should().Be(2.0); // Quadro 8 (a reconstrução antiga tinha 4,2)
+        microsservicos.Valores["VOL"].Should().Be(2.0); // Quadro 7 (a reconstrução antiga tinha 4,2)
         microsservicos.Valores["AUT"].Should().Be(4.5);
     }
 

@@ -116,7 +116,7 @@ public partial class ExportacaoTests : IAsyncLifetime
         {
             "# Caso", "# Versão dos parâmetros", "# Limites e pesos", "# Assinaturas de referência", "# Nós", "# Arestas",
             "# Fluxos principais", "# Comunidades", "# Modularidade", "# Avisos", "# Bandas", "# Eixos", "# Distâncias",
-            "# Contribuições por eixo", "# Matriz de rastreabilidade",
+            "# Pesos efetivos", "# Contribuições por eixo", "# Matriz de rastreabilidade",
         })
             linhas.Should().Contain(secao);
 
@@ -134,6 +134,7 @@ public partial class ExportacaoTests : IAsyncLifetime
         DadosDaSecao(linhas, "# Arestas").Should().HaveCount(21);
         DadosDaSecao(linhas, "# Matriz de rastreabilidade").Should().HaveCount(44);
         DadosDaSecao(linhas, "# Contribuições por eixo").Should().HaveCount(20); // 2 perfis × 10 eixos
+        DadosDaSecao(linhas, "# Pesos efetivos").Should().HaveCount(10); // dez eixos aplicáveis: efetivos = configurados
     }
 
     [Fact]

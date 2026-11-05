@@ -53,7 +53,7 @@ interface FormProps {
   aoSalvar: (descricao: string, rascunho: Rascunho) => Promise<void>;
 }
 
-// Limites (Quadro 7) e pesos pᵢ (4.5.1) editáveis; a soma dos pesos precisa ser 1 (RN07, CT10) e é mostrada
+// Limites (Quadro 6) e pesos pᵢ (4.5.1) editáveis; a soma dos pesos precisa ser 1 (RN07, CT10) e é mostrada
 // em tempo real. Salvar NÃO altera a versão atual: cria uma nova (RF11).
 function FormularioDeLimitesEPesos({ conjunto, aoSalvar }: FormProps) {
   const [rascunho, setRascunho] = useState<Rascunho>(() => paraRascunho(conjunto));
@@ -88,7 +88,7 @@ function FormularioDeLimitesEPesos({ conjunto, aoSalvar }: FormProps) {
     <form className="cartao formulario" onSubmit={enviar} aria-label="Limites e pesos dos eixos">
       <h2 className="cartao__titulo">Limites de normalização e pesos dos eixos</h2>
       <p className="texto-suave">
-        Cada métrica bruta é levada à escala 0–5 entre o seu mínimo e o seu máximo (TCC 4.5, Quadro 7); os pesos pᵢ
+        Cada métrica bruta é levada à escala 0–5 entre o seu mínimo e o seu máximo (TCC 4.5, Quadro 6); os pesos pᵢ
         combinam os eixos na distância até cada perfil (4.5.1) e precisam somar 1.
       </p>
       <div className="tabela-rolagem">
@@ -174,7 +174,7 @@ function FormularioDeLimitesEPesos({ conjunto, aoSalvar }: FormProps) {
 function TabelaDeAssinaturas({ conjunto }: { conjunto: ConjuntoDeParametros }) {
   return (
     <div className="cartao">
-      <h2 className="cartao__titulo">Assinaturas de referência (Quadro 8)</h2>
+      <h2 className="cartao__titulo">Assinaturas de referência (Quadro 7)</h2>
       <p className="texto-suave">
         Valores de cada estilo nos dez eixos, nesta versão. Para alterá-los, use <Link to="/perfis">Perfis Arquiteturais</Link>:
         cada alteração gera uma nova versão. As assinaturas são provisórias, definidas pelos pesquisadores (TCC 4.6).

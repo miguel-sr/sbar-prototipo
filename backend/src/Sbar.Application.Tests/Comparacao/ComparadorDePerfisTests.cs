@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Sbar.Application.Tests.Comparacao;
 
-// Assinaturas provisórias de referência — TCC, Quadro 8 (seção 4.6). Mesmos valores do seed do produto,
+// Assinaturas provisórias de referência — TCC, Quadro 7 (seção 4.6). Mesmos valores do seed do produto,
 // replicados aqui como golden data local para não acoplar este teste ao conteúdo do banco.
 internal static class AssinaturasDoQuadro8
 {
@@ -29,7 +29,7 @@ public class ComparadorDePerfisTests
         Enum.GetValues<Eixo>().ToDictionary(e => e, _ => 0.1);
 
     // Normalizados dos Quadros 25 (Estudo de Caso 1) e 35 (Estudo de Caso 2), com os valores BRUTOS do TCC
-    // normalizados sem arredondar (as contribuições dos Quadros 26/36 usam o normalizado não arredondado).
+    // normalizados sem arredondar (as contribuições dos Quadros 26/34 usam o normalizado não arredondado).
     private static IReadOnlyList<ResultadoDeEixo> EixosDoQuadro(IReadOnlyDictionary<Eixo, double> normalizados) =>
         normalizados.Select(p => new ResultadoDeEixo(p.Key, true, null, p.Value, null)).ToList();
 
@@ -47,7 +47,7 @@ public class ComparadorDePerfisTests
         [Eixo.VOL] = 5 * (45.0 / 21 - 1) / 2, [Eixo.DEP] = 5 * (0.8 - 0.2) / 0.8,
     };
 
-    // Isola o comparador: alimenta os normalizados publicados (Quadros 25 e 35) diretamente, sem depender dos eixos calculados
+    // Isola o comparador: alimenta os normalizados publicados (Quadros 25 e 33) diretamente, sem depender dos eixos calculados
     // pelo produto — uma falha aqui é do comparador, não de FLEX/AUT/DEP (o pipeline inteiro é CT04 em ServicoDeMetricasTests).
     [Theory]
     [Trait("Requisito", "CT04")]
@@ -80,5 +80,120 @@ public class ComparadorDePerfisTests
         var distancia = ComparadorDePerfis.CalcularDistancia(eixos, perfil, pesos);
 
         distancia.Should().Be(0);
+    }
+
+    // ---- RN07/RN08: eixo "não aplicável" sai da distância e os pesos dos demais são renormalizados (DV-11) ----
+
+    // Serviço com normalizado 3,0 nos eixos aplicáveis; assinatura = Monólito Modular do Quadro 7
+    // (CO 2,0; ESC 1,5; INT 1,0; UX 2,5; DISP 3,0; FLEX 1,5; TR 1,5; AUT 1,0; VOL 3,0; DEP 3,0).
+    private static List<ResultadoDeEixo> ServicoComNormalizado3(params Eixo[] naoAplicaveis) =>
+        Enum.GetValues<Eixo>()
+            .Select(e => naoAplicaveis.Contains(e)
+                ? new ResultadoDeEixo(e, false, null, null, "Denominador zero")
+                : new ResultadoDeEixo(e, true, null, 3.0, null))
+            .ToList();
+
+    [Fact]
+    [Trait("Requisito", "CT12")]
+    [Trait("Requisito", "RF10")]
+    [Trait("Requisito", "RN07")]
+    [Trait("Requisito", "RN08")]
+    public void Comparar_DeveRenormalizarOsPesos_QuandoUmEixoNaoEAplicavel()
+    {
+        // DEP não aplicável: 9 eixos aplicáveis, pesos 0,1 cada → p' = 0,1 / 0,9 = 1/9, soma dos efetivos = 1.
+        // Diferenças (3,0 − assinatura): CO 1,0; ESC 1,5; INT 2,0; UX 0,5; DISP 0; FLEX 1,5; TR 1,5; AUT 2,0; VOL 0.
+        // Soma dos quadrados = 1 + 2,25 + 4 + 0,25 + 0 + 2,25 + 2,25 + 4 + 0 = 16,0 → d = √(16 / 9) = 4/3.
+        // (Sem renormalizar, d = √(16 × 0,1) = 1,2649 — a distância encolhia ~5%.)
+        var eixos = ServicoComNormalizado3(Eixo.DEP);
+
+        var distancia = ComparadorDePerfis.Comparar(eixos, AssinaturasDoQuadro8.MonolitoModular.ParaAssinatura(), PesosIguais);
+        var pesos = ComparadorDePerfis.CalcularPesosEfetivos(eixos, PesosIguais);
+
+        distancia.Distancia.Should().BeApproximately(4.0 / 3.0, 1e-12);
+        distancia.Contribuicoes.Should().HaveCount(9);
+        distancia.Contribuicoes.Sum(c => c.Contribuicao).Should().BeApproximately(16.0 / 9.0, 1e-12); // soma = d²
+        pesos.Efetivos.Sum(p => p.PesoEfetivo).Should().BeApproximately(1.0, 1e-12);
+        pesos.Efetivos.Should().OnlyContain(p => Math.Abs(p.PesoConfigurado - 0.1) < 1e-12 && Math.Abs(p.PesoEfetivo - 1.0 / 9) < 1e-12);
+        pesos.Omitidos.Should().Equal(Eixo.DEP);
+    }
+
+    [Fact]
+    [Trait("Requisito", "RN07")]
+    [Trait("Requisito", "RN08")]
+    public void Comparar_DeveRenormalizarOsPesos_QuandoDoisEixosNaoSaoAplicaveis()
+    {
+        // INT e UX não aplicáveis: 8 eixos, p' = 0,1 / 0,8 = 0,125.
+        // Diferenças: CO 1,0; ESC 1,5; DISP 0; FLEX 1,5; TR 1,5; AUT 2,0; VOL 0; DEP 0 → soma dos quadrados
+        // = 1 + 2,25 + 0 + 2,25 + 2,25 + 4 + 0 + 0 = 11,75 → d = √(11,75 × 0,125) = √1,46875 ≈ 1,21191.
+        // (Sem renormalizar, d = √(11,75 × 0,1) ≈ 1,0840.)
+        var eixos = ServicoComNormalizado3(Eixo.INT, Eixo.UX);
+
+        var distancia = ComparadorDePerfis.Comparar(eixos, AssinaturasDoQuadro8.MonolitoModular.ParaAssinatura(), PesosIguais);
+        var pesos = ComparadorDePerfis.CalcularPesosEfetivos(eixos, PesosIguais);
+
+        distancia.Distancia.Should().BeApproximately(Math.Sqrt(1.46875), 1e-12);
+        distancia.Distancia.Should().BeApproximately(1.21191, 0.00001);
+        pesos.Efetivos.Should().HaveCount(8).And.OnlyContain(p => Math.Abs(p.PesoEfetivo - 0.125) < 1e-12);
+        pesos.Efetivos.Sum(p => p.PesoEfetivo).Should().BeApproximately(1.0, 1e-12);
+        pesos.Omitidos.Should().BeEquivalentTo(new[] { Eixo.INT, Eixo.UX });
+    }
+
+    [Fact]
+    [Trait("Requisito", "RN07")]
+    public void Comparar_DeveManterDistanciaEntreZeroECinco_ComEixosOmitidosEPesosDesiguais()
+    {
+        // Pesos desiguais e dois eixos omitidos: a distância máxima continua 5 porque Σ p' = 1.
+        var pesosDesiguais = new Dictionary<Eixo, double>
+        {
+            [Eixo.CO] = 0.3, [Eixo.ESC] = 0.2, [Eixo.INT] = 0.1, [Eixo.UX] = 0.05, [Eixo.DISP] = 0.05,
+            [Eixo.FLEX] = 0.1, [Eixo.TR] = 0.05, [Eixo.AUT] = 0.05, [Eixo.VOL] = 0.05, [Eixo.DEP] = 0.05,
+        };
+        var eixos = Enum.GetValues<Eixo>()
+            .Select(e => e is Eixo.INT or Eixo.TR
+                ? new ResultadoDeEixo(e, false, null, null, "Denominador zero")
+                : new ResultadoDeEixo(e, true, null, 0.0, null))
+            .ToList();
+
+        var distancia = ComparadorDePerfis.Comparar(eixos, AssinaturasDoQuadro8.Microsservicos.ParaAssinatura(), pesosDesiguais);
+
+        distancia.Distancia.Should().BeInRange(0, ComparadorDePerfis.DistanciaMaxima);
+        double.IsNaN(distancia.Distancia).Should().BeFalse();
+        ComparadorDePerfis.CalcularPesosEfetivos(eixos, pesosDesiguais).Efetivos.Sum(p => p.PesoEfetivo)
+            .Should().BeApproximately(1.0, 1e-12);
+    }
+
+    [Fact]
+    [Trait("Requisito", "RN07")]
+    public void CalcularPesosEfetivos_DeveManterOsPesosConfigurados_QuandoOsDezEixosSaoAplicaveis()
+    {
+        var pesos = ComparadorDePerfis.CalcularPesosEfetivos(EixosDoQuadro(NormalizadosDoQuadro25), PesosIguais);
+
+        pesos.Omitidos.Should().BeEmpty();
+        pesos.Efetivos.Should().HaveCount(10).And.OnlyContain(p => p.PesoEfetivo == p.PesoConfigurado && p.PesoEfetivo == 0.1);
+    }
+
+    [Fact]
+    [Trait("Requisito", "RN08")]
+    public void Comparar_DeveFalharComMensagemClara_QuandoNenhumEixoEAplicavel()
+    {
+        var eixos = ServicoComNormalizado3(Enum.GetValues<Eixo>());
+
+        var pesos = ComparadorDePerfis.CalcularPesosEfetivos(eixos, PesosIguais);
+        var comparar = () => ComparadorDePerfis.Comparar(eixos, AssinaturasDoQuadro8.MonolitoModular.ParaAssinatura(), PesosIguais);
+
+        pesos.PodeComparar.Should().BeFalse();
+        pesos.Efetivos.Should().BeEmpty();
+        comparar.Should().Throw<InvalidOperationException>().WithMessage("*Nenhum eixo aplicável*"); // nunca devolve NaN nem 0 enganoso
+    }
+
+    [Fact]
+    [Trait("Requisito", "RN08")]
+    public void CalcularPesosEfetivos_NaoDevePoderComparar_QuandoOsEixosAplicaveisTemPesoZero()
+    {
+        // Só o CO é aplicável e tem peso 0: Σ p_j = 0, a renormalização dividiria por zero.
+        var eixos = ServicoComNormalizado3(Enum.GetValues<Eixo>().Where(e => e != Eixo.CO).ToArray());
+        var pesos = Enum.GetValues<Eixo>().ToDictionary(e => e, e => e == Eixo.CO ? 0.0 : 0.1111111111111111);
+
+        ComparadorDePerfis.CalcularPesosEfetivos(eixos, pesos).PodeComparar.Should().BeFalse();
     }
 }

@@ -9,7 +9,7 @@ using Sbar.Infrastructure.Identidade;
 namespace Sbar.Infrastructure;
 
 // O contexto também guarda as contas (Identity) e as chaves do Data Protection: sem as chaves no banco, o cookie de
-// sessão deixaria de valer a cada deploy, porque o container da API é recriado (ver docs/projeto/ARQUITETURA.md).
+// sessão deixaria de valer a cada deploy, porque o container da API é recriado (PLANO_CONTAS_DE_USUARIO.md 4.1).
 public class SbarDbContext(DbContextOptions<SbarDbContext> options, IUsuarioAtual? usuarioAtual = null)
     : IdentityUserContext<Usuario, Guid>(options), IDataProtectionKeyContext
 {

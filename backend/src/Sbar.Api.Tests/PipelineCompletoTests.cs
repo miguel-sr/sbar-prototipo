@@ -35,7 +35,7 @@ public class PipelineCompletoTests : IAsyncLifetime
 
     // CT03/CT04 pela API real: Mapa (nós, arestas com justificativa e fluxos de entrada) → comunidades → dez métricas →
     // distâncias, com os valores dos Quadros 25 e 27 do TCC revisado. Os dois perfis de referência
-    // ("Monólito Modular (provisório)"/"Microsserviços (provisório)", Quadro 8) já vêm semeados pela migration desde
+    // ("Monólito Modular (provisório)"/"Microsserviços (provisório)", Quadro 7) já vêm semeados pela migration desde
     // o primeiro `Database.Migrate()`, então a comparação aparece na primeira leitura.
     [Fact]
     public async Task PipelineCompleto_DeveCalcularRadarComparacaoEMatriz_QuandoEstudoDeCaso1CompletoViaApi()

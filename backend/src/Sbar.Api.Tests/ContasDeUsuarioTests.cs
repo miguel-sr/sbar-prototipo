@@ -8,7 +8,7 @@ using Sbar.Domain.Enums;
 
 namespace Sbar.Api.Tests;
 
-// Contas, sessão e isolamento entre usuários (contas de usuário) pela API real.
+// Contas, sessão e isolamento entre usuários (PLANO_CONTAS_DE_USUARIO.md, fases 1 e 2) pela API real.
 // Fica na camada da Api porque o que se prova é a combinação cookie + política padrão + filtro do DbContext + banco.
 [Collection("Postgres")]
 public class ContasDeUsuarioTests : IAsyncLifetime
@@ -163,7 +163,7 @@ public class ContasDeUsuarioTests : IAsyncLifetime
         deA!.Eixos.Single(e => e.Eixo == Eixo.CO).Maximo.Should().Be(45);
         deA.Assinaturas.Should().HaveCount(1);
         deB!.Versao.Numero.Should().Be(1);
-        deB.Eixos.Single(e => e.Eixo == Eixo.CO).Maximo.Should().Be(40); // Quadro 7, intacto
+        deB.Eixos.Single(e => e.Eixo == Eixo.CO).Maximo.Should().Be(40); // Quadro 6, intacto
         deB.Assinaturas.Should().HaveCount(2);
         (await usuarioB.GetAsync($"/api/perfis-arquiteturais/{perfilDeA.Id}")).StatusCode.Should().Be(HttpStatusCode.NotFound, "o Id do perfil de A não existe para B, que tem a sua própria cópia");
     }

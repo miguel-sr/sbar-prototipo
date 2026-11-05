@@ -149,7 +149,7 @@ export function PerfisArquiteturais() {
         <div>
           <h1 className="titulo-pagina">Perfis Arquiteturais</h1>
           <p className="texto-suave">
-            Valores de referência (0 a 5) de cada estilo arquitetural nos dez eixos do Radar (assinaturas, Quadro 8). O
+            Valores de referência (0 a 5) de cada estilo arquitetural nos dez eixos do Radar (assinaturas, Quadro 7). O
             perfil mais próximo de cada Estudo de Caso é o de menor distância. O TCC trata esses valores como
             provisórios, sujeitos a validação por especialistas (seções 4.6 e 5.4).
           </p>

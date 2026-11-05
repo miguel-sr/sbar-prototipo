@@ -1,6 +1,6 @@
 # Glossário do Método SBAR
 
-> Fonte: os documentos do curso (base, anterior à revisão do TCC), atualizado conforme o TCC revisado — códigos de tipo de aresta e regra de prevalência de CRI sobre ASY (seção 4.2.4), comunidades por modularidade (4.4.1), assinaturas de referência (Quadro 8, 4.6) e requisitos do protótipo (5.3). Este arquivo é a fonte única de conteúdo para o ícone de ajuda flutuante do protótipo (`AjudaFlutuante.tsx`, ver POP-09 seção 8.5) e é importado como texto pelo front: **mantenha os títulos `##` e `###` existentes**, pois a ajuda contextual aponta para eles. Qualquer atualização de termo deve ser feita aqui primeiro. Termos marcados como "previsto" existem no TCC revisado, mas ainda não nesta versão do protótipo.
+> Fonte: `docs/fontes/GLOSSARIO.pdf` (base, anterior à revisão do TCC), atualizado conforme o TCC revisado (`docs/fontes/TCC.pdf`, 2026-10-21) — códigos de tipo de aresta e regra de prevalência de CRI sobre ASY (seção 4.2.4), comunidades por modularidade (4.4.1), assinaturas de referência (Quadro 7, 4.6) e requisitos do protótipo (5.3). Este arquivo é a fonte única de conteúdo para o ícone de ajuda flutuante do protótipo (`AjudaFlutuante.tsx`, ver POP-09 seção 8.5) e é importado como texto pelo front: **mantenha os títulos `##` e `###` existentes**, pois a ajuda contextual aponta para eles. Qualquer atualização de termo deve ser feita aqui primeiro. Termos marcados como "previsto" existem no TCC revisado, mas ainda não nesta versão do protótipo.
 
 ## Nó
 
@@ -107,7 +107,7 @@ Um gráfico com 10 eixos (métricas) que resumem o comportamento do fluxo — ca
 
 ## Perfil Arquitetural
 
-Um "modelo de referência" (ex.: Monólito Modular, Microsserviços) com valores esperados para os mesmos 10 eixos do Radar — serve para comparar o fluxo analisado com estilos conhecidos de arquitetura. No TCC é chamado de **assinatura** ou **perfil de referência**. Os valores atuais (Quadro 8 do TCC) são **provisórios**: foram definidos pelos pesquisadores com base nas características usualmente associadas a cada estilo, não resultam de medição, e ainda serão validados por especialistas. Podem ser editados.
+Um "modelo de referência" (ex.: Monólito Modular, Microsserviços) com valores esperados para os mesmos 10 eixos do Radar — serve para comparar o fluxo analisado com estilos conhecidos de arquitetura. No TCC é chamado de **assinatura** ou **perfil de referência**. Os valores atuais (Quadro 7 do TCC) são **provisórios**: foram definidos pelos pesquisadores com base nas características usualmente associadas a cada estilo, não resultam de medição, e ainda serão validados por especialistas. Podem ser editados.
 
 ## Recomendação
 

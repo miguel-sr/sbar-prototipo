@@ -6,10 +6,10 @@ import { expect, test } from '../support/fixtures';
 // errado o contrato da API (eixo → cartão, `nosGargalo` → destaque no Mapa, comunidades/Q, margem
 // e distâncias do perfil mais próximo, categorias da matriz, contagens da home) e a API devolvendo
 // algo que a UI não sabe exibir. As FÓRMULAS não são testadas aqui — são do backend (xUnit); este
-// teste só confere que a UI mostra, em pt-BR, os números publicados no TCC revisado (Quadros 35 e
+// teste só confere que a UI mostra, em pt-BR, os números publicados no TCC revisado (Quadros 33 e
 // 37; fluxos F1–F4b como entrada) e que não há erro de integração.
 //
-// Ordem de cadastro: o Paciente nasce pela interface e os demais nós vêm na ordem do Quadro 31 (a mesma dos
+// Ordem de cadastro: o Paciente nasce pela interface e os demais nós vêm na ordem do Quadro 57 (a mesma dos
 // quadros do TCC). As comunidades NÃO dependem dela — o TCC explora todos os empates de modularidade e adota a
 // divisão de maior Q —; ela só mantém a numeração C1…C4 igual à dos quadros.
 

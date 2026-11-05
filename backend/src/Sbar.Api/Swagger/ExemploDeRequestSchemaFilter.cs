@@ -5,7 +5,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Sbar.Api.Swagger;
 
-// Exemplos de payload prontos pro Swagger "Try it out" — POP-09
+// Exemplos de payload prontos pro Swagger "Try it out" — POP-09/PLANO_DE_IMPLEMENTACAO.md Etapa 7
 // pede "Swagger com exemplos/descrições", não só a descrição textual de cada campo.
 public class ExemploDeRequestSchemaFilter : ISchemaFilter
 {

@@ -3,8 +3,8 @@ using Sbar.Domain.Exceptions;
 
 namespace Sbar.Domain.ValueObjects;
 
-// Parâmetros de uma análise (RF11): limites de normalização (Quadro 7), pesos p_i dos eixos (4.5.1) e assinaturas
-// de referência (Quadro 8), mais a versão a que pertencem. Imutável: uma versão antiga pode ser reaplicada
+// Parâmetros de uma análise (RF11): limites de normalização (Quadro 6), pesos p_i dos eixos (4.5.1) e assinaturas
+// de referência (Quadro 7), mais a versão a que pertencem. Imutável: uma versão antiga pode ser reaplicada
 // aos Estudos de Caso (protocolo de avaliação, 5.4).
 public sealed record ConjuntoDeParametros(
     VersaoDeParametrosInfo Versao,

@@ -3,9 +3,9 @@ using Sbar.Domain.Metricas;
 
 namespace Sbar.Api.Dtos;
 
-/// <summary>Quanto um eixo contribui para a distância ao quadrado até um perfil de referência (Quadros 26/36 do TCC revisado).</summary>
+/// <summary>Quanto um eixo contribui para a distância ao quadrado até um perfil de referência (Quadros 26/34 do TCC revisado).</summary>
 /// <param name="Eixo">CO, ESC, INT, UX, DISP, FLEX, TR, AUT, VOL ou DEP.</param>
-/// <param name="Contribuicao">p_i × (Norm_i do serviço − Norm_i do perfil)², sem arredondar. A soma das dez contribuições é a distância ao quadrado.</param>
+/// <param name="Contribuicao">p'_i × (Norm_i do serviço − Norm_i do perfil)², sem arredondar, com p'_i o peso efetivo (renormalizado entre os eixos aplicáveis). A soma das contribuições é a distância ao quadrado.</param>
 public record ContribuicaoDeEixoDto(Eixo Eixo, double Contribuicao)
 {
     public static ContribuicaoDeEixoDto DeContribuicao(ContribuicaoDeEixo contribuicao) =>

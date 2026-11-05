@@ -7,8 +7,5 @@
   },
   "ConnectionStrings": {
     "Sbar": "Host=localhost;Port=5432;Database=sbar;Username=sbar;Password=sbar"
-  },
-  "Sbar": {
-    "CodigoDeConvite": "desenvolvimento"
   }
 }

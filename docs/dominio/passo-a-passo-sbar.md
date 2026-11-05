@@ -1,6 +1,6 @@
 # Passo a Passo: Do Service Blueprint ao Perfil de Referência Mais Próximo
 
-> Guia único, do início ao fim, unindo os 7 passos de "Blueprint → Mapa" (`metodo-sbar.md` seção 4) com os passos de "Mapa → Radar → perfil de referência" (`metodo-sbar.md` seção 5), conforme o **TCC revisado**. Usa um **exemplo ilustrativo próprio** (não é um Estudo de Caso do TCC), pequeno o bastante para ser acompanhado à mão. Para os exemplos reais e completos (15 nós, 21 arestas), ver [`estudos-de-caso.md`](./estudos-de-caso.md). Todos os números abaixo foram calculados por script e conferidos; as regras (comunidades, fluxos como entrada, assinaturas do Quadro 8, saída como subsídio) são as do TCC revisado.
+> Guia único, do início ao fim, unindo os 7 passos de "Blueprint → Mapa" (`metodo-sbar.md` seção 4) com os passos de "Mapa → Radar → perfil de referência" (`metodo-sbar.md` seção 5), conforme o **TCC revisado** (`docs/fontes/TCC.pdf`). Usa um **exemplo ilustrativo próprio** (não é um Estudo de Caso do TCC), pequeno o bastante para ser acompanhado à mão. Para os exemplos reais e completos (15 nós, 21 arestas), ver [`estudos-de-caso.md`](./estudos-de-caso.md). Todos os números abaixo foram calculados por script e conferidos; as regras (comunidades, fluxos como entrada, assinaturas do Quadro 7, saída como subsídio) são as do TCC revisado.
 
 ## O exemplo: cadastro em uma newsletter
 
@@ -31,7 +31,7 @@ Todas as 5 bandas ficam ocupadas (`N = 6`). A banda é sempre derivada do tipo (
 
 ### Passos 3 a 5 — Traçar arestas, classificar e atribuir peso
 
-Toda aresta precisa de uma **justificativa rastreável ao Blueprint** (RN03). Tipos pela natureza da comunicação (Quadro 4); se uma interação for assíncrona **e** tiver restrição de tempo real, prevalece CRI (RN04). Peso pelo critério do Quadro 21: 3 = ocorre em 100% das instâncias e no caminho obrigatório, 2 = recorrente de apoio, 1 = condicional ou periódica.
+Toda aresta precisa de uma **justificativa rastreável ao Blueprint** (RN03). Tipos pela natureza da comunicação (Quadro 3); se uma interação for assíncrona **e** tiver restrição de tempo real, prevalece CRI (RN04). Peso pelo critério do Quadro 21: 3 = ocorre em 100% das instâncias e no caminho obrigatório, 2 = recorrente de apoio, 1 = condicional ou periódica.
 
 | Origem | Destino | Tipo | Peso `w(e)` | Justificativa (RN03) |
 |---|---|---|---|---|
@@ -57,7 +57,7 @@ Toda aresta precisa de uma **justificativa rastreável ao Blueprint** (RN03). Ti
 | DS | Suporte | 3 | 3,00 | 0,00 | 3,00 | Não (n=1) |
 | E1 | Externo | 2+1=3 | 3,00 | 0,00 | 3,00 | Não (n=1) |
 
-Nenhum nó vira gargalo — e a banda Frontstage (TP1=6, TP2=2) é um exemplo ao vivo de uma limitação do método: mesmo com TP1 carregando **3× mais carga** que TP2, o critério não consegue sinalizar, porque a banda tem exatamente 2 nós (`μ+σ` é sempre igual ao maior valor).
+Nenhum nó vira gargalo — e a banda Frontstage (TP1=6, TP2=2) é um exemplo ao vivo do **Achado 2** de `analise-critica.md` (continua válido no TCC revisado): mesmo com TP1 carregando **3× mais carga** que TP2, o critério não consegue sinalizar, porque a banda tem exatamente 2 nós (`μ+σ` é sempre igual ao maior valor).
 
 ### Passo 7 — Validar a malha e cadastrar os fluxos principais
 
@@ -83,7 +83,7 @@ Malha válida: todas as etapas dos dois fluxos têm aresta rastreável ao Bluepr
 | E1–TP2 | 1 | 3 | 2 | 26·1 − 3·2 = **20** |
 | P1–TP1 | 3 | 8 | 6 | 26·3 − 8·6 = **30** |
 
-Há um **empate** no maior ganho (A–TP1 e P1–DS, ambos 54). Neste exemplo ele não muda o resultado (as duas fusões acontecem de qualquer forma; testado com 300 sorteios de desempate), mas em grafos maiores empates podem levar a divisões finais diferentes: o TCC resolve isso explorando todas as fusões empatadas e adotando a divisão de maior Q (seção 4.4.1; decisão D9 em `regras-de-negocio.md` e a seção de comunidades de `estudos-de-caso.md`). Sequência completa de fusões (o algoritmo para quando nenhuma fusão aumenta Q; o Q "todos separados" é negativo e cresce a cada fusão boa):
+Há um **empate** no maior ganho (A–TP1 e P1–DS, ambos 54). Neste exemplo ele não muda o resultado (as duas fusões acontecem de qualquer forma; testado com 300 sorteios de desempate), mas em grafos maiores empates podem levar a divisões finais diferentes: o TCC resolve isso explorando todas as fusões empatadas e adotando a divisão de maior Q (seção 4.4.1; decisão D9 em `duvidas-pendentes.md` e a seção de comunidades de `estudos-de-caso.md`). Sequência completa de fusões (o algoritmo para quando nenhuma fusão aumenta Q; o Q "todos separados" é negativo e cresce a cada fusão boa):
 
 | # | Fusão escolhida | `2m·W_ij − K_i·K_j` | Pares empatados nesse ganho | Q após a fusão |
 |---|---|---|---|---|
@@ -96,7 +96,7 @@ Resultado: **3 comunidades** — `{A, TP1}`, `{P1, DS}`, `{TP2, E1}` — com **Q
 
 Saídas para outras comunidades: `{A, TP1}` → TP1→P1 (1); `{P1, DS}` → P1→E1 (1); `{TP2, E1}` → TP2→A (1). Isolamento dos nós internos (Backstage ∪ Suporte): `P1` tem 3 arestas, 2 delas para outras comunidades (TP1→P1 e P1→E1) → `1 − 2/3 = 0,333`; `DS` tem 1 aresta (P1→DS), dentro da própria comunidade → `1,000`.
 
-**8b. As dez métricas e a normalização** (`Norm = clamp(5 × (bruto − mín)/(máx − mín), 0, 5)`, limites do Quadro 7):
+**8b. As dez métricas e a normalização** (`Norm = clamp(5 × (bruto − mín)/(máx − mín), 0, 5)`, limites do Quadro 6):
 
 | Eixo | Cálculo | Bruto | Normalizado (0–5) |
 |---|---|---|---|
@@ -111,7 +111,7 @@ Saídas para outras comunidades: `{A, TP1}` → TP1→P1 (1); `{P1, DS}` → P1�
 | VOL | soma dos pesos / M = `13/6` | 2,1667 | 2,92 |
 | DEP | 2 fluxos de entrada, 4 bandas cada, média 4 → `4/5` | 0,80 | 3,75 |
 
-Observações: (1) **FLEX deixou de ser constante** (na versão antiga do método, com `cluster(v)` por conectividade fraca, valia sempre 5,00). (2) **AUT continua em 1,00 aqui**, mas por um motivo estrutural e não pela tautologia antiga: as três comunidades formam um ciclo e cada uma tem exatamente uma saída; o `Q` baixo é o sinal de que a partição, neste grafo minúsculo, pouco informa. (3) ESC e DISP também batem no teto por falta de dados (banda com poucos nós, nenhum gargalo detectável).
+Observações: (1) **FLEX deixou de ser constante** (no TCC antigo, com `cluster(v)` por conectividade fraca, valia sempre 5,00 — Achado 1 de `analise-critica.md`, resolvido pela revisão). (2) **AUT continua em 1,00 aqui**, mas por um motivo estrutural e não pela tautologia antiga: as três comunidades formam um ciclo e cada uma tem exatamente uma saída; o `Q` baixo é o sinal de que a partição, neste grafo minúsculo, pouco informa. (3) ESC e DISP também batem no teto por falta de dados (banda com poucos nós, nenhum gargalo detectável) — Achados 2 e 6 de `analise-critica.md`.
 
 ### Passo 9 — Montar o perfil e o Radar Arquitetural
 
@@ -121,7 +121,7 @@ P_servico = (CO=1,47; ESC=5,00; INT=1,67; UX=1,67; DISP=5,00; FLEX=3,33; TR=1,15
 
 ### Passo 10 — Comparar com os perfis de referência e interpretar
 
-Os perfis são as **assinaturas provisórias do Quadro 8** do TCC (atribuídas pelos pesquisadores, ainda a validar por especialistas — não são medição). Com `p_i = 0,1` para todos os eixos (soma = 1, RN07) e `d = √(Σ p_i × (Norm_i^Serviço − Norm_i^Estilo)²)`:
+Os perfis são as **assinaturas provisórias do Quadro 7** do TCC (atribuídas pelos pesquisadores, ainda a validar por especialistas — não são medição). Com `p_i = 0,1` para todos os eixos (soma = 1, RN07) e `d = √(Σ p_i × (Norm_i^Serviço − Norm_i^Estilo)²)`:
 
 | Eixo | Serviço | Monólito Modular | Contribuição | Microsserviços | Contribuição |
 |---|---|---|---|---|---|

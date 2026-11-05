@@ -1,6 +1,6 @@
 # Estudos de Caso — Dados de Referência para Testes
 
-> Fonte: o TCC II revisado (TCC II revisado, **versão de 2026-10-25**), capítulos 6 e 7, mais as seções 4.4.1, 4.5 e 4.6 (Quadros 7 e 8). Estes números são a base dos testes exigidos pelo POP-06 e o **oráculo de teste** do protótipo (casos CT01–CT04 do Quadro 15, seção 5.3.6). **Não são medições de um sistema real** — os pesquisadores definiram elementos, pesos e classificações por inferência justificada a partir da descrição do domínio (o próprio TCC trata isso como ameaça à validade e chama a aplicação de demonstrativa).
+> Fonte: `docs/fontes/TCC.pdf` (**versão de 2026-11-06**; os valores numéricos dos capítulos 6, 7 e 8 são os mesmos de 2026-10-25 e 2026-11-05 — só a numeração de Quadros e seções mudou), capítulos 6 e 7 (o capítulo 8, Estudo de Caso 3, está no fim deste arquivo), mais as seções 4.4.1, 4.5 e 4.6 (Quadros 6 e 7). Estes números são a base dos testes exigidos pelo POP-06 e o **oráculo de teste** do protótipo (casos CT01–CT04 do Quadro 14, seção 5.3.6). **Não são medições de um sistema real** — os pesquisadores definiram elementos, pesos e classificações por inferência justificada a partir da descrição do domínio (o próprio TCC trata isso como ameaça à validade e chama a aplicação de demonstrativa).
 
 Todos os valores deste documento foram **recalculados de forma independente** (implementação própria dos dez eixos, do algoritmo de comunidades e das distâncias, a partir dos nós/arestas/fluxos de cada caso) e batem com os quadros do TCC, incluindo as contribuições por eixo, as análises de sensibilidade e as participações percentuais de FLEX+AUT.
 
@@ -8,20 +8,20 @@ Todos os valores deste documento foram **recalculados de forma independente** (i
 
 | Item | Antes (Entrega 3) | Agora (TCC revisado) |
 |---|---|---|
-| Grafo, cargas, pontos críticos | Quadros 7–9 e 14–16 | **Inalterados** (renumerados: Q20/Q22/Q23 e Q31/Q32/Q33) |
+| Grafo, cargas, pontos críticos | Quadros 7–9 e 14–16 | **Inalterados** (renumerados: Q20/Q22/Q23 e, no CE2, Q57/Q58 no Apêndice C e Q31) |
 | `comunidade(v)` (antes `cluster(v)`) | Componente conexo (conectividade fraca) → um único cluster | **Comunidades por modularidade** (CNM, **explorando todos os empates e adotando a divisão de maior Q**), Q = 0,41 com 3 comunidades (CE1) e 0,34 com 4 (CE2) |
 | FLEX / AUT | 5,00 / 5,00 nos dois casos | CE1 **3,50 / 1,67**; CE2 **2,76 / 2,50** |
 | Fluxos principais F e DEP | O TCC já usava fluxos escolhidos pelos pesquisadores (DEP 2,50 e 3,75); o **projeto** os derivava automaticamente (DEP 3,25 e 3,00) | Fluxos escolhidos **como entrada** do método (RF05) e verificados no grafo (CT09): DEP 2,50 (CE1) e 3,75 (CE2); a derivação automática deixa de valer |
-| Assinaturas dos estilos | Implícitas nas distâncias | **Publicadas no Quadro 8** (Microsserviços VOL = 2,0) |
+| Assinaturas dos estilos | Implícitas nas distâncias | **Publicadas no Quadro 7** (Microsserviços VOL = 2,0) |
 | Distâncias e perfil mais próximo | CE1 Micro 1,368 × Monólito 1,867 (Micro); CE2 Micro 1,221 × Monólito 1,915 (Micro) | CE1 **Monólito 1,051** × Micro 1,605; CE2 **Monólito 1,107** × Micro 1,346 (margem pequena) |
-| Quadros | Numeração antiga (Q2–Q20) | Renumerados (Q4–Q39); ver a tabela de equivalência no fim deste documento |
+| Quadros | Numeração antiga (Q2–Q20) | Renumerados a cada versão do TCC; ver a tabela de equivalência (Entrega 3 → `TCC_II.pdf` → TCC atual) no fim deste documento. **Os números de Quadro citados neste arquivo, no código e nos testes seguem o TCC atual (2026-11-06).** |
 | Saída do método | "Recomendação arquitetural preliminar" | "Perfil de referência mais próximo" como **subsídio** à decisão do arquiteto (RN09) |
 
 ---
 
 ## Parâmetros comuns aos dois casos (fixtures)
 
-### Limites provisórios de normalização — Quadro 7 do TCC
+### Limites provisórios de normalização — Quadro 6 do TCC
 
 | Eixo | Métrica bruta | Mínimo | Máximo |
 |---|---|---|---|
@@ -38,7 +38,7 @@ Todos os valores deste documento foram **recalculados de forma independente** (i
 
 \* Limite máximo provisório de UX, adotado como 3,0 nas aplicações demonstrativas e sujeito à validação empírica. `Norm_i = clamp(5 × (M_i − min)/(max − min), 0, 5)` (RN06).
 
-### Assinaturas provisórias de referência — Quadro 8 do TCC
+### Assinaturas provisórias de referência — Quadro 7 do TCC
 
 Valores atribuídos pelos pesquisadores com base nas características usualmente associadas a cada estilo; **não resultam de medição empírica** e ainda serão validados por especialistas (protocolo da seção 5.4). Pesos da distância: `p_i = 0,1` para os dez eixos (soma = 1, RN07). Distância máxima possível = 5.
 
@@ -228,7 +228,7 @@ Rótulos (C1 "Entrada, entrega e cardápio", C2 "Pedido, preparo e dados", C3 "P
 
 ### Distâncias até os perfis de referência — Quadros 26 e 27 do TCC
 
-Pesos `p_i = 0,1`; perfis do Quadro 8 (ver "Parâmetros comuns"). A contribuição de cada eixo é `p_i × (Norm_i^Serviço − Norm_i^Estilo)²`, calculada com os **normalizados sem arredondar** (usar os já arredondados a 2 casas muda a 4ª casa). Reproduz as tabelas do TCC termo a termo, com uma única diferença de 0,0001: contribuição de CO até o Monólito = 0,0631 recalculada contra 0,0630 publicada (o TCC parte do normalizado intermediário 2,794).
+Pesos `p_i = 0,1`; perfis do Quadro 7 (ver "Parâmetros comuns"). A contribuição de cada eixo é `p_i × (Norm_i^Serviço − Norm_i^Estilo)²`, calculada com os **normalizados sem arredondar** (usar os já arredondados a 2 casas muda a 4ª casa). Reproduz as tabelas do TCC termo a termo, com uma única diferença de 0,0001: contribuição de CO até o Monólito = 0,0631 recalculada contra 0,0630 publicada (o TCC parte do normalizado intermediário 2,794).
 
 | Eixo | Serviço (norm.) | Monólito Modular | Contribuição | Microsserviços | Contribuição |
 |---|---|---|---|---|---|
@@ -280,7 +280,7 @@ Participação de FLEX+AUT na soma dos termos da distância: versão inicial 81,
 | Consulta de cardápio/estoque (etapa 1) | TP1→S1→DS (SYN) | `carga(v)` | UX, DEP | Representa interação frequente do fluxo inicial e contribui para a carga de DS. |
 | Pagamento (etapa 5) | Comunidade C3 (P5, S2, E1) | `isolamento(v)`; `saídas_externas(c)` | FLEX, AUT | Comunidade com uma única saída (P5→DS), que contribui para a autonomia dos módulos. |
 
-Este é o formato de dado que a funcionalidade "Matriz de Rastreabilidade" (tela T8 do POP-09) precisa produzir a partir de qualquer mapa — não é uma tabela fixa, é derivada dos nós/arestas/comunidades relevantes. O TCC revisado inclui a coluna do **elemento do Blueprint (com a etapa)**, vários eixos por linha, gargalos de qualquer banda e linhas de **comunidade** (FLEX/AUT).
+Este é o formato de dado que a funcionalidade "Matriz de Rastreabilidade" (tela T8 do POP-09) precisa produzir a partir de qualquer mapa — não é uma tabela fixa, é derivada dos nós/arestas/comunidades relevantes. O TCC revisado inclui a coluna do **elemento do Blueprint (com a etapa)**, vários eixos por linha, gargalos de qualquer banda e linhas de **comunidade** (FLEX/AUT); a implementação atual cobre menos que isso (DV-07).
 
 ### Observações e limitações (seção 6.12)
 
@@ -292,7 +292,7 @@ A versão inicial de `cluster(v)` (conectividade fraca) gerava um único compone
 
 Domínio: agendamento de consultas em clínica médica — acesso ao portal, consulta de horários por especialidade, confirmação, lembrete, check-in no dia do atendimento e sincronização com prontuário/convênio externo.
 
-### Nós (15) — Quadro 31 do TCC
+### Nós (15) — Quadro 57 do TCC
 
 | Nó | Tipo | Banda | Descrição |
 |---|---|---|---|
@@ -312,7 +312,7 @@ Domínio: agendamento de consultas em clínica médica — acesso ao portal, con
 | E1 | Externo | Externo | Gateway SMS/E-mail |
 | E2 | Externo | Externo | Prontuário/Convênio |
 
-### Arestas (21) — Quadro 32 do TCC
+### Arestas (21) — Quadro 58 do TCC
 
 | Origem | Destino | Tipo | Peso |
 |---|---|---|---|
@@ -338,9 +338,9 @@ Domínio: agendamento de consultas em clínica médica — acesso ao portal, con
 | P5 | DS | SYN | 2 |
 | P5 | E2 | BAT | 1 |
 
-Soma de todos os pesos: **45**. Única aresta CRI: A→P5 (check-in, peso 3). Há **duas** arestas paralelas entre S2→E1 (uma ASY peso 2, uma BAT peso 1) e entre E1→TP4 (mesma dualidade) — o fluxo de confirmação e o de lembrete compartilham o mesmo canal técnico (S2, E1, TP4), mas são interações distintas. Confirma a decisão D6 (arestas paralelas entre o mesmo par de nós são permitidas); na modularidade elas são **somadas** (peso do par S2–E1 = 3; E1–TP4 = 3). Conferido por reconstrução independente: somando os pesos das arestas incidentes a cada nó, a carga bate nó a nó com o Quadro 33.
+Soma de todos os pesos: **45**. Única aresta CRI: A→P5 (check-in, peso 3). Há **duas** arestas paralelas entre S2→E1 (uma ASY peso 2, uma BAT peso 1) e entre E1→TP4 (mesma dualidade) — o fluxo de confirmação e o de lembrete compartilham o mesmo canal técnico (S2, E1, TP4), mas são interações distintas. Confirma a decisão D6 (arestas paralelas entre o mesmo par de nós são permitidas); na modularidade elas são **somadas** (peso do par S2–E1 = 3; E1–TP4 = 3). Conferido por reconstrução independente: somando os pesos das arestas incidentes a cada nó, a carga bate nó a nó com o Quadro 31.
 
-### Carga por nó e identificação de gargalo (ponto potencialmente crítico) — Quadro 33 do TCC
+### Carga por nó e identificação de gargalo (ponto potencialmente crítico) — Quadro 31 do TCC
 
 | Nó | Banda | Carga | μ da banda | σ da banda | Gargalo (pot. crítico)? |
 |---|---|---|---|---|---|
@@ -362,7 +362,7 @@ Soma de todos os pesos: **45**. Única aresta CRI: A→P5 (check-in, peso 3). H�
 
 Pontos potencialmente críticos (gargalos): **TP2** (seleção de horário), **P2** (registro do agendamento) e **DS** (repositório de agendas) — três nós; TP2 é Frontstage e por isso **não entra em DISP** (que só considera Backstage ∪ Suporte), mas é destacado no Mapa (halo) e aparece na matriz (DISP, UX).
 
-### Fluxos principais F (entrada do método) — seção 7.6
+### Fluxos principais F (entrada do método) — seção 7.2
 
 No TCC revisado os fluxos principais são **definidos pelos pesquisadores e fornecidos como entrada** (RF05); o sistema só verifica se cada fluxo possui caminho dirigido no grafo (CT09). Cada fluxo é uma sequência de nós; as bandas contam origem e destino. Todos os fluxos abaixo têm caminho dirigido no grafo (cada par consecutivo é uma aresta existente), logo o teste de fluxo inválido (CT09) não dispara aqui.
 
@@ -378,7 +378,7 @@ Média = 4,0 bandas por fluxo → `DEP_bruto = 4,0/5 = 0,8` → normalizado **3,
 
 Os fluxos F4a e F4b são duas interações distintas a partir do check-in: atualização do estado no repositório interno e sincronização com o prontuário/convênio. F2 e F3 não começam no Ator (começam no processo P2). Nenhum dos fluxos é derivado automaticamente: se o usuário não cadastrar fluxos, `F = ∅` e DEP é "não aplicável".
 
-### Comunidades estruturais e modularidade (seção 4.4.1; 7.8.1)
+### Comunidades estruturais e modularidade (seção 4.4.1; 7.4)
 
 Algoritmo guloso de Clauset-Newman-Moore sobre o grafo não direcionado ponderado (ver "Parâmetros comuns"). `m` = soma dos pesos = 45. Quatro comunidades, **Q = 0,3440** (publicado: 0,34):
 
@@ -391,7 +391,7 @@ Algoritmo guloso de Clauset-Newman-Moore sobre o grafo não direcionado ponderad
 
 Rótulos do TCC: C1 "Acesso e atendimento", C2 "Disponibilidade e dados", C3 "Notificações", C4 "Seleção, registro e confirmação". Caso de teste **CT02** do TCC: quatro comunidades, Q ≈ 0,34.
 
-### Isolamento dos nós internos — Quadro 34 do TCC
+### Isolamento dos nós internos — Quadro 32 do TCC
 
 `isolamento(v) = 1 − arestas_para_outras_comunidades(v) / grau_total(v)`, para os 8 nós internos (Backstage ∪ Suporte).
 
@@ -408,7 +408,7 @@ Rótulos do TCC: C1 "Acesso e atendimento", C2 "Disponibilidade e dados", C3 "No
 
 `FLEX = 4,417 / 8 = 0,5521` → normalizado `5 × 0,5521 = 2,760` ≈ **2,76**. `AUT = 2/4 = 0,50` (comunidades com no máximo uma saída: C2, C3) → **2,50**.
 
-### Resultado esperado das dez métricas — Quadro 35 do TCC
+### Resultado esperado das dez métricas — Quadro 33 do TCC
 
 | Eixo | Métrica bruta | Mín | Máx | Normalizado (0–5) |
 |---|---|---|---|---|
@@ -437,9 +437,9 @@ Rótulos do TCC: C1 "Acesso e atendimento", C2 "Disponibilidade e dados", C3 "No
 - **VOL**: 45/21 = 2,1429 → `5 × (2,1429 − 1)/2` = 2,857 ≈ 2,86.
 - **DEP**: ver a seção de fluxos principais (média 4,0 → 0,8 → `5 × (0,8 − 0,2)/0,8` = 3,75).
 
-### Distâncias até os perfis de referência — Quadros 36 e 37 do TCC
+### Distâncias até os perfis de referência — Quadros 34 e 35 do TCC
 
-Pesos `p_i = 0,1`; perfis do Quadro 8 (ver "Parâmetros comuns"). A contribuição de cada eixo é `p_i × (Norm_i^Serviço − Norm_i^Estilo)²`, calculada com os **normalizados sem arredondar** (usar os já arredondados a 2 casas muda a 4ª casa). Reproduz as tabelas do TCC termo a termo, com uma única diferença de 0,0001: contribuição de CO até o Monólito = 0,0631 recalculada contra 0,0630 publicada (o TCC parte do normalizado intermediário 2,794).
+Pesos `p_i = 0,1`; perfis do Quadro 7 (ver "Parâmetros comuns"). A contribuição de cada eixo é `p_i × (Norm_i^Serviço − Norm_i^Estilo)²`, calculada com os **normalizados sem arredondar** (usar os já arredondados a 2 casas muda a 4ª casa). Reproduz as tabelas do TCC termo a termo, com uma única diferença de 0,0001: contribuição de CO até o Monólito = 0,0631 recalculada contra 0,0630 publicada (o TCC parte do normalizado intermediário 2,794).
 
 | Eixo | Serviço (norm.) | Monólito Modular | Contribuição | Microsserviços | Contribuição |
 |---|---|---|---|---|---|
@@ -464,9 +464,9 @@ Pesos `p_i = 0,1`; perfis do Quadro 8 (ver "Parâmetros comuns"). A contribuiç�
 
 **Perfil de referência mais próximo (subsídio à decisão do arquiteto, RN09): Monólito Modular**; diferença entre as distâncias = 0,239 (≈ 4,8% da escala). Não é uma decisão: o arquiteto deve considerar custos, competências da equipe, previsão de crescimento e demais restrições que o Mapa não captura.
 
-**Leitura do TCC (7.10.1/7.10.2):** o serviço tem perfil intermediário entre os dois estilos e a comparação, isoladamente, pouco os diferencia (margem de ≈ 4,8% da escala, contra ≈ 11% no Estudo de Caso 1) — situação em que a análise do arquiteto é mais importante. A distância até Microsserviços vem de INT (0,533), TR (0,469) e AUT (0,400), cerca de 77% da soma; a distância até o Monólito vem de ESC (0,506), AUT (0,225) e FLEX (0,159), cerca de 73%. A comunidade de notificações (C3) tem isolamento elevado e pode justificar tratamento separado. TP2, P2 e DS merecem atenção por concentrarem carga, considerando os requisitos não funcionais do Quadro 29 (em especial o controle de concorrência na reserva de horários).
+**Leitura do TCC (7.5):** o serviço tem perfil intermediário entre os dois estilos e a comparação, isoladamente, pouco os diferencia (margem de ≈ 4,8% da escala, contra ≈ 11% no Estudo de Caso 1) — situação em que a análise do arquiteto é mais importante. A distância até Microsserviços vem de INT (0,533), TR (0,469) e AUT (0,400), cerca de 77% da soma; a distância até o Monólito vem de ESC (0,506), AUT (0,225) e FLEX (0,159), cerca de 73%. A comunidade de notificações (C3) tem isolamento elevado e pode justificar tratamento separado. TP2, P2 e DS merecem atenção por concentrarem carga, considerando os requisitos não funcionais do Quadro 29 (em especial o controle de concorrência na reserva de horários).
 
-### Análise de sensibilidade (seção 7.10.1, documentada no próprio TCC)
+### Análise de sensibilidade (seção 7.5, documentada no próprio TCC)
 
 | Configuração | Monólito Modular | Microsserviços | Perfil mais próximo |
 |---|---|---|---|
@@ -479,7 +479,7 @@ Participação de FLEX+AUT na soma dos termos da distância: versão inicial 77,
 
 **Sensibilidade adicional do TCC de 2026-10-25 (simulações; não são parte do oráculo dos testes):** como a margem (0,239) é menor que a do CE1, a mesma verificação foi aplicada: com perturbações uniformes de até ±0,25, ±0,5 e ±1,0 nas assinaturas (20.000 simulações cada) a indicação mudou em 0,0%, 3,2% e 19,2% dos casos; nenhuma das 80 alterações isoladas de um valor de assinatura inverteu o resultado; retirando cada eixo individualmente o resultado também não se inverteu, mas a margem caiu para 0,027 sem INT; nenhuma das 42 variações de intensidade de uma única aresta (comunidades recalculadas) alterou a indicação.
 
-### Matriz de rastreabilidade — Quadro 38 do TCC
+### Matriz de rastreabilidade — Quadro 36 do TCC
 
 | Elemento do Blueprint (etapa) | Nó/Aresta | Métrica | Eixo(s) | Contribuição |
 |---|---|---|---|---|
@@ -493,15 +493,15 @@ Participação de FLEX+AUT na soma dos termos da distância: versão inicial 77,
 | Portal e seleção de horário | TP1→TP2 | `carga(v)` | UX, DEP | Representa a interação inicial do paciente e contribui para a estrutura dos fluxos de agendamento. |
 | Confirmação e lembrete (etapas 4 e 5) | Comunidade C3 (TP4, P4, S2, E1) | `isolamento(v)`; `saídas_externas(c)` | FLEX, AUT | Agrupamento de notificações com uma única saída (TP4→A), que contribui para a autonomia dos módulos. |
 
-Este é o formato de dado que a funcionalidade "Matriz de Rastreabilidade" (tela T8 do POP-09) precisa produzir a partir de qualquer mapa — não é uma tabela fixa, é derivada dos nós/arestas/comunidades relevantes. O TCC revisado inclui a coluna do **elemento do Blueprint (com a etapa)**, vários eixos por linha, gargalos de qualquer banda e linhas de **comunidade** (FLEX/AUT).
+Este é o formato de dado que a funcionalidade "Matriz de Rastreabilidade" (tela T8 do POP-09) precisa produzir a partir de qualquer mapa — não é uma tabela fixa, é derivada dos nós/arestas/comunidades relevantes. O TCC revisado inclui a coluna do **elemento do Blueprint (com a etapa)**, vários eixos por linha, gargalos de qualquer banda e linhas de **comunidade** (FLEX/AUT); a implementação atual cobre menos que isso (DV-07).
 
-### Observações e limitações (seção 7.12)
+### Observações e limitações (seção 7.7)
 
 A definição inicial de `cluster(v)` também resultou em um único componente e em FLEX/AUT máximos; a repetição em outro domínio confirmou que era limitação da definição de agrupamento, não do sistema de pedidos. Com as comunidades por modularidade o Mapa divide-se em quatro comunidades e as métricas passam a diferenciar os dois serviços. Permanecem as limitações da seção 6.12 (inferência dos pesquisadores, critérios e limites provisórios, assinaturas a validar por especialistas) e, como a diferença entre as distâncias é pequena, o resultado é mais sensível a ajustes nas assinaturas. Os resultados são uma aplicação demonstrativa do SBAR, base para o protótipo e para a validação do método.
 
 ---
 
-## Comparação entre os Estudos de Caso 1 e 2 — Quadro 39 do TCC
+## Comparação entre os Estudos de Caso 1 e 2 — Quadro 39 do `TCC_II.pdf` (no TCC atual, o Quadro 48 reúne os três casos)
 
 | Indicador | Estudo de Caso 1 | Estudo de Caso 2 |
 |---|---|---|
@@ -525,9 +525,9 @@ A definição inicial de `cluster(v)` também resultou em um único componente e
 | Perfil de referência mais próximo | Monólito Modular | Monólito Modular (margem pequena) |
 | Pontos potencialmente críticos internos | P1 e DS | P2 e DS |
 
-Por que os dois casos coincidem em CO e divergem nos demais eixos (seção 7.13 do TCC):
+Por que os dois casos coincidem em CO e divergem nos demais eixos (seção 7.8 do TCC):
 
-- **CO idêntico** — mesmo número de nós (15) e as mesmas 5 bandas; `CO = N + 2×bandas` não depende das arestas (limitação do método).
+- **CO idêntico** — mesmo número de nós (15) e as mesmas 5 bandas; `CO = N + 2×bandas` não depende das arestas (limitação registrada no Achado 6 de `analise-critica.md`).
 - **ESC maior no CE2** — menor proporção de conexões diretas entre nós da mesma banda (5 contra 7 pares ligados).
 - **INT maior no CE2** — cinco arestas ligadas a integrações externas (contra quatro).
 - **UX maior no CE2** — o canal de notificação TP4 recebe duas interações de entrada (confirmação e lembrete).
@@ -547,8 +547,275 @@ O TCC revisado registra os resultados das duas versões (DSR, seção 3.2). Valo
 |---|---|---|
 | `cluster(v)` | 1 componente com os 15 nós | 1 componente com os 15 nós |
 | FLEX / AUT (norm.) | 5,00 / 5,00 | 5,00 / 5,00 |
-| Distâncias (assinaturas do Quadro 8) | Monólito 1,867, Microsserviços 1,368 → Microsserviços | Monólito 1,915, Microsserviços 1,176 → Microsserviços |
+| Distâncias (assinaturas do Quadro 7) | Monólito 1,867, Microsserviços 1,368 → Microsserviços | Monólito 1,915, Microsserviços 1,176 → Microsserviços |
 | FLEX+AUT na soma de Monólito | 81,0% | 77,1% |
 | Sem FLEX/AUT (8 eixos, p = 1/8) | Monólito 0,909 × Micro 1,478 (inversão) | Monólito 1,025 × Micro 1,254 (inversão) |
 
 Notas históricas: (1) na Entrega 3 o CE2 listava Microsserviços = 1,221, calculado com a assinatura implícita de VOL = 4,2 (a mesma que o projeto havia reconstruído por engenharia reversa); o Quadro 8 publica VOL = 2,0 e o "inicial" do TCC revisado passa a ser 1,176. (2) O Quadro 20 da Entrega 3 listava `1,859` para a distância do CE1 ao Monólito, divergente do 1,867 do Quadro 11 daquela versão (a soma do quadro dá 1,867); o TCC revisado não traz mais essa divergência (Quadro 39: 1,051 e 1,605). (3) O projeto havia adotado, antes do TCC revisado, derivação automática de fluxos (DEP 0,72/3,25 no CE1 e 0,68/3,00 no CE2) e propôs um limiar de peso de aresta para `cluster(v)`; ambas as decisões foram **superadas** pelo TCC revisado (fluxos como entrada; comunidades por modularidade).
+
+---
+
+## Histórico: o que mudou nos testes automatizados (Etapa 9, 2026-10-22)
+
+Quando este documento foi reescrito (2026-10-21; atualizado em 2026-10-25 para o TCC que explora os empates do CNM), o código ainda seguia o TCC antigo e a tabela abaixo listava o que passaria a divergir. **A Etapa 9 aplicou essas mudanças**: os testes de backend e de front passaram a usar os valores deste documento como oráculo (fixture única de referência no backend), e o quadro fica como **registro histórico** do que foi trocado (IDs `DV-xx` = divergências código × TCC revisado, `docs/projeto/FLUXO_E_STATUS.md` seção 5). Os testes de ponta a ponta no navegador (Playwright) são atualizados em seguida.
+
+| O que testava | Valor antes da Etapa 9 | Valor do TCC revisado (hoje) | DV |
+|---|---|---|---|
+| FLEX e AUT (calculadoras, métricas e pipeline) | FLEX = 1,00 e AUT = 1,00 (norm. 5,00) nos dois casos | CE1: FLEX 0,700 / AUT 0,3333 (3,50 / 1,67) · CE2: FLEX 0,5521 / AUT 0,50 (2,76 / 2,50) | DV-01 |
+| Agrupamento (detector) | componentes conexos (1 cluster) | CNM explorando os empates e adotando a divisão de maior Q: 3 comunidades, Q = 0,4117 (CE1) e 4, Q = 0,3440 (CE2); casos-limite (m = 0, comunidade única, empates) | DV-01 |
+| DEP (calculadora, métricas e pipeline) | derivado automaticamente: CE1 0,72 / 3,25; CE2 0,68 / 3,00 | com fluxos de entrada: CE1 0,60 / 2,50; CE2 0,80 / 3,75 | DV-02 |
+| Seed de Perfis | "(reconstruído)"; Microsserviços VOL = 4,2 | "(provisório)" (Quadro 7); Microsserviços VOL = 2,0 | DV-03 |
+| Distâncias (comparador e pipeline) | CE1 1,862 / 1,306; CE2 1,900 / 1,258 (Microsserviços mais próximo) | CE1 **1,051 / 1,605**; CE2 **1,107 / 1,346** (Monólito Modular mais próximo nos dois) | DV-01/02/03 |
+| E2E do front (fluxo da Clínica) | FLEX 5,00, AUT 5,00, DEP 3,00; Microsserviços 1,258 × Monólito 1,900 | FLEX 2,76, AUT 2,50, DEP 3,75; Monólito 1,107 × Microsserviços 1,346 | DV-01/02/03/04, DV-10 |
+| Comentários que citam Quadros | Q5, Q7–Q11, Q14–Q18 (numeração antiga) | Q7, Q20–Q28, Q31–Q38 (ver tabela de renumeração) | DV-10 |
+
+Permaneceram válidos, sem mudança: CO, ESC, INT, UX, DISP, TR e VOL de ambos os casos; cargas, médias/desvios por banda e pontos críticos; e a normalização (Quadro 6).
+
+**Atualização de 2026-10-25 (D9 resolvida):** o TCC passou a explorar todos os empates do CNM e a adotar a divisão de maior Q. Os valores de CE1 (3 comunidades, Q = 0,4117, FLEX 3,50, AUT 1,67, distâncias 1,051 / 1,605, margem 0,553) e de CE2 (FLEX 2,76, distâncias 1,107 / 1,346, margem 0,239) deste documento são os novos; os da tabela acima (coluna "hoje") descrevem o estado intermediário da Etapa 9, com o desempate por ordem de cadastro, que **não vale mais**.
+
+---
+
+## Casos de teste do TCC (Quadro 14) que usam estes dados
+
+| ID | Caso de teste | Entrada | Resultado esperado | Requisitos |
+|---|---|---|---|---|
+| CT01 | Pontos potencialmente críticos | Mapa do CE1 | P1 e DS | RF04, RN05 |
+| CT02 | Detecção de comunidades | Mapa do CE2 | 4 comunidades, Q ≈ 0,34 | RF06 |
+| CT03 | Métricas e normalização | Mapas dos CE1, CE2 e CE3 | Valores dos Quadros 25, 33 e 42 | RF07, RF08 |
+| CT04 | Distâncias | Perfis dos CE1, CE2 e CE3 | Valores dos Quadros 27, 35 e 45 | RF10 |
+| CT09 | Fluxo incompleto | Fluxo com etapa sem aresta correspondente | Fluxo sinalizado como inválido | RF05 |
+| CT11 | Nó sem ligação | Dois nós isolados adicionados ao CE1 | Um aviso por nó, com o nome do nó | RN10 |
+| CT12 | Pesos renormalizados | Mapa sem fluxos principais e sem nós de Frontstage | Eixos omitidos da distância; pesos dos demais somam 1; distância ≤ 5 | RF10, RN07, RN08 |
+
+Os demais (CT05–CT08, CT10) não dependem destes casos: intensidade inválida, aresta sem justificativa, valor-limite da normalização, métrica não aplicável (mapa sem Frontstage) e pesos que não somam 1. Técnica: caixa-preta, com classes de equivalência e análise do valor-limite; o oráculo são os valores calculados nos capítulos 6 e 7.
+
+---
+
+## Equivalência de numeração dos Quadros (Entrega 3 → `TCC_II.pdf` → TCC atual)
+
+A numeração mudou a cada versão do TCC (a de 2026-11-06 removeu o Quadro "Resumo da metodologia", o cronograma e a seção 3.3, e levou as tabelas completas do CE2 e do CE3 para o Apêndice C). Citações a Quadros (em código, testes e documentos) devem usar a **última coluna**. Seções do CE2: o TCC atual reuniu as antigas 7.2–7.13 em 7.1–7.8 (ver o mapa abaixo).
+
+| Conteúdo | Entrega 3 | `TCC_II.pdf` | TCC atual |
+|---|---|---|---|
+| Taxonomia das arestas / dos nós | Q2 / Q3 | Q4 / Q5 | Q3 / Q4 |
+| Eixos e métricas observadas | Q4 | Q6 | Q5 |
+| Limites de normalização | Q5 | Q7 | Q6 |
+| Assinaturas de referência | — | Q8 | Q7 |
+| Fluxo operacional do SBAR | Q6 | Q9 | Q8 |
+| Estudo de Caso 1: Service Blueprint · nós · arestas · pontos críticos | Q6 · Q7 · Q8 · Q9 | Q19 · Q20 · Q22 · Q23 | Q19 · Q20 · Q22 · Q23 |
+| Estudo de Caso 1: isolamento · métricas · contribuições · distâncias · matriz | — · Q10 · — · Q11 · Q12 | Q24 · Q25 · Q26 · Q27 · Q28 | Q24 · Q25 · Q26 · Q27 · Q28 |
+| Estudo de Caso 2: Service Blueprint · nós · arestas · pontos críticos | Q13 · Q14 · Q15 · Q16 | Q30 · Q31 · Q32 · Q33 | Q30 · **Q57** · **Q58** · Q31 (nós e arestas no Apêndice C.1/C.2) |
+| Estudo de Caso 2: isolamento · métricas · contribuições · distâncias · matriz | — · Q17 · — · Q18 · Q19 | Q34 · Q35 · Q36 · Q37 · Q38 | Q32 · Q33 · Q34 · Q35 · Q36 (matriz completa: Q59) |
+| Comparação entre os estudos de caso | Q20 | Q39 (casos 1 e 2) | Q48 (casos 1, 2 e 3) |
+| Critério de `w(e)` · RNFs/RNs do CE1 · RNFs/RNs do CE2 | — | Q21 · Q18 · Q29 | Q21 · Q18 · Q29 |
+| Capítulo 5 | — | Q10 stakeholders · Q11 RFs · Q12 RNFs · Q13 RNs · Q14 histórias · Q15 casos de teste · Q16 instrumento · Q17 cronograma | Q9 stakeholders · Q10 RFs · Q11 RNFs · Q12 RNs · Q13 histórias · Q14 casos de teste **e resultado da execução** · Q15 tecnologias · Q16 suíte por camada · Q17 instrumento (cronograma removido) |
+| Estudo de Caso 3 (cap. 8) | — | (`2026-11-05`: Q44 RNFs/RNs · Q45 Blueprint · Q46 nós · Q47 arestas · Q48 pontos críticos · Q49 comunidades · Q50 isolamento · Q51 métricas · Q52 contribuições · Q53 sensibilidade · Q54 distâncias · Q55 matriz) | Q37 RNFs/RNs · Q38 Blueprint · Q60 nós · Q61 arestas (Apêndice C.1/C.2) · Q39 pontos críticos · Q40 comunidades · Q41 isolamento · Q42 métricas · Q43 contribuições · Q44 sensibilidade · Q45 distâncias · Q46 matriz (completa: Q62) · Q47 cinco repositórios × um |
+| Assinaturas provisórias × revisadas (9.7) | — | (`2026-11-05`: Q63 · Q64) | Q53 · Q54 |
+
+Seções do Estudo de Caso 2 (`TCC_II.pdf` → atual): 7.1/7.2 → 7.1 · 7.3/7.4/7.6 → 7.2 · 7.5/7.7 → 7.3 · 7.8/7.9 → 7.4 (7.8.1 → 7.4) · 7.10 (7.10.1/7.10.2) → 7.5 · 7.11 → 7.6 · 7.12 → 7.7 · 7.13 → 7.8. Capítulos 6 e 8 mantêm a numeração.
+
+---
+
+## Estudo de Caso 3 — Plataforma de Marketplace
+
+> Fonte: capítulo 8 do TCC (valores idênticos nas versões de 2026-11-05 e 2026-11-06; Quadros 37 a 47, mais 60 e 61 do Apêndice C; fluxos principais da seção 8.7; assinaturas revisadas e Quadros 53 e 54 da seção 9.7). **Cenário construído pelos autores** como teste de sanidade da capacidade de discriminar estilos (seção 8.1) — não é um sistema real nem evidência de validação independente. Os valores foram conferidos contra o backend (`Sbar.Application`, parâmetros dos Quadros 6 e 7) e contra uma implementação independente em Python, com diferença máxima de 4e-16. Teste automatizado: `backend/src/Sbar.Application.Tests/CasosDeUso/ServicoDeMetricasEstudoDeCaso3Tests.cs` (fixture `EstudosDeCasoDeReferencia.CriarEstudoDeCaso3`, CT03/CT04).
+
+Domínio: marketplace com vendedores (publicação de anúncios), clientes (busca, carrinho, checkout, pagamento, entrega e acompanhamento), repasse ao vendedor, notificações e nota fiscal. Cinco repositórios de dados (DS1 a DS5), um por contexto de negócio, e sete sistemas externos.
+
+### Nós (33) — Quadro 60 do TCC
+
+| Id | Nó | Tipo | Banda |
+|---|---|---|---|
+| A1 | Cliente | Ator/Cliente | Ator |
+| A2 | Vendedor | Ator/Cliente | Ator |
+| TP1 | Busca e vitrine de produtos | Touchpoint | Frontstage |
+| TP2 | Carrinho e checkout | Touchpoint | Frontstage |
+| TP3 | Acompanhamento do pedido | Touchpoint | Frontstage |
+| TP4 | Painel de anúncios | Touchpoint | Frontstage |
+| TP5 | Canal de notificações | Touchpoint | Frontstage |
+| TP6 | Painel de pedidos e repasses | Touchpoint | Frontstage |
+| P1 | Publicação de anúncios | Processo | Backstage |
+| P2 | Busca e indexação | Processo | Backstage |
+| P3 | Reserva de estoque | Processo | Backstage |
+| P4 | Gestão do pedido | Processo | Backstage |
+| P5 | Autorização de pagamento | Processo | Backstage |
+| P6 | Análise antifraude | Processo | Backstage |
+| P7 | Separação e despacho | Processo | Backstage |
+| P8 | Cotação de frete e etiquetas | Processo | Backstage |
+| P9 | Atualização de rastreio | Processo | Backstage |
+| P10 | Repasse ao vendedor | Processo | Backstage |
+| P11 | Emissão de nota fiscal | Processo | Backstage |
+| S1 | Identidade e autenticação | Suporte | Suporte |
+| S2 | Serviço de notificações | Suporte | Suporte |
+| DS1 | Catálogo de produtos | Dados | Suporte |
+| DS2 | Estoque | Dados | Suporte |
+| DS3 | Pedidos | Dados | Suporte |
+| DS4 | Pagamentos e repasses | Dados | Suporte |
+| DS5 | Entregas e rastreio | Dados | Suporte |
+| E1 | Gateway de pagamento | Externo | Externo |
+| E2 | Serviço antifraude | Externo | Externo |
+| E3 | Transportadoras | Externo | Externo |
+| E4 | Provedor de mensagens | Externo | Externo |
+| E5 | ERP do vendedor | Externo | Externo |
+| E6 | Emissor de nota fiscal | Externo | Externo |
+| E7 | Moderação de anúncios | Externo | Externo |
+
+### Arestas (49) — Quadro 61 do TCC
+
+Soma das intensidades `Σ w(e)` = 108. Todas as arestas têm justificativa no TCC (RN03); os testes usam o texto padrão `Interação X → Y (TCC revisado, Quadro 61)`.
+
+| # | Origem → Destino | Tipo | w |
+|---|---|---|---|
+| 1 | A2 → TP4 | SYN | 2 |
+| 2 | TP4 → S1 | SYN | 2 |
+| 3 | TP4 → P1 | SYN | 3 |
+| 4 | P1 → DS1 | SYN | 3 |
+| 5 | E5 → P1 | BAT | 1 |
+| 6 | P1 → P2 | ASY | 2 |
+| 7 | E5 → P3 | BAT | 1 |
+| 8 | A1 → TP1 | SYN | 3 |
+| 9 | TP1 → S1 | SYN | 2 |
+| 10 | TP1 → P2 | SYN | 3 |
+| 11 | P2 → DS1 | SYN | 3 |
+| 12 | TP1 → TP2 | SYN | 3 |
+| 13 | TP2 → P3 | CRI | 3 |
+| 14 | P3 → DS2 | SYN | 3 |
+| 15 | TP2 → P8 | SYN | 2 |
+| 16 | P8 → E3 | SYN | 2 |
+| 17 | TP2 → P4 | SYN | 3 |
+| 18 | P4 → DS3 | SYN | 3 |
+| 19 | P4 → P5 | CRI | 3 |
+| 20 | P5 → P6 | CRI | 3 |
+| 21 | P6 → E2 | SYN | 3 |
+| 22 | P5 → E1 | SYN | 3 |
+| 23 | E1 → P5 | SYN | 2 |
+| 24 | P5 → DS4 | SYN | 2 |
+| 25 | P5 → P4 | ASY | 2 |
+| 26 | P4 → P7 | ASY | 3 |
+| 27 | TP6 → P7 | SYN | 2 |
+| 28 | P7 → P8 | SYN | 3 |
+| 29 | P8 → DS5 | SYN | 2 |
+| 30 | E3 → P9 | ASY | 2 |
+| 31 | P9 → DS5 | SYN | 2 |
+| 32 | P9 → S2 | ASY | 2 |
+| 33 | S2 → E4 | ASY | 2 |
+| 34 | E4 → TP5 | ASY | 2 |
+| 35 | TP5 → A1 | ASY | 2 |
+| 36 | A1 → TP3 | SYN | 2 |
+| 37 | TP3 → DS5 | SYN | 2 |
+| 38 | P4 → S2 | ASY | 2 |
+| 39 | P9 → P10 | BAT | 1 |
+| 40 | P10 → DS4 | BAT | 1 |
+| 41 | P10 → E1 | BAT | 1 |
+| 42 | P10 → TP6 | ASY | 1 |
+| 43 | A2 → TP6 | SYN | 2 |
+| 44 | P4 → P11 | ASY | 2 |
+| 45 | P11 → E6 | SYN | 2 |
+| 46 | E6 → P11 | ASY | 2 |
+| 47 | P11 → DS3 | SYN | 2 |
+| 48 | P1 → E7 | ASY | 2 |
+| 49 | E7 → P1 | ASY | 2 |
+
+### Carga por nó e identificação de gargalo (ponto potencialmente crítico) — Quadro 39 do TCC
+
+Desvio padrão **populacional**; gargalo se `carga(v) > μ + σ` da própria banda. Bandas: Ator μ = 5,50 σ = 1,50; Frontstage μ = 7,00 σ = 3,00; Backstage μ = 9,36 σ = 4,01; Suporte μ = 4,71 σ = 1,28; Externo μ = 3,86 σ = 1,12.
+
+| Nó | Banda | Carga | Gargalo |
+|---|---|---|---|
+| A1 | Ator | 7 | Não |
+| A2 | Ator | 4 | Não |
+| TP1 | Frontstage | 11 | **Sim** |
+| TP2 | Frontstage | 11 | **Sim** |
+| TP3 | Frontstage | 4 | Não |
+| TP4 | Frontstage | 7 | Não |
+| TP5 | Frontstage | 4 | Não |
+| TP6 | Frontstage | 5 | Não |
+| P1 | Backstage | 13 | Não |
+| P2 | Backstage | 8 | Não |
+| P3 | Backstage | 7 | Não |
+| P4 | Backstage | 18 | **Sim** |
+| P5 | Backstage | 15 | **Sim** |
+| P6 | Backstage | 6 | Não |
+| P7 | Backstage | 8 | Não |
+| P8 | Backstage | 9 | Não |
+| P9 | Backstage | 7 | Não |
+| P10 | Backstage | 4 | Não |
+| P11 | Backstage | 8 | Não |
+| S1 | Suporte | 4 | Não |
+| S2 | Suporte | 6 | **Sim** |
+| DS1 | Suporte | 6 | **Sim** |
+| DS2 | Suporte | 3 | Não |
+| DS3 | Suporte | 5 | Não |
+| DS4 | Suporte | 3 | Não |
+| DS5 | Suporte | 6 | **Sim** |
+| E1 | Externo | 6 | **Sim** |
+| E2 | Externo | 3 | Não |
+| E3 | Externo | 4 | Não |
+| E4 | Externo | 4 | Não |
+| E5 | Externo | 2 | Não |
+| E6 | Externo | 4 | Não |
+| E7 | Externo | 4 | Não |
+
+Pontos potencialmente críticos: **TP1, TP2, P4, P5, S2, DS1, DS5, E1** (oito; só P4, P5, S2, DS1 e DS5 entram em DISP, que considera Backstage e Suporte).
+
+### Fluxos principais F (entrada do método) — seção 8.7
+
+| Fluxo | Caminho | Bandas percorridas |
+|---|---|---|
+| F1 – Publicação de anúncio | A2 → TP4 → P1 → DS1 | 4 |
+| F2 – Busca de produtos | A1 → TP1 → P2 → DS1 | 4 |
+| F3 – Reserva de estoque | TP2 → P3 → DS2 | 3 |
+| F4 – Compra e pagamento | A1 → TP1 → TP2 → P4 → P5 → E1 → P5 → DS4 | 5 |
+| F5 – Despacho e notificação | P4 → P7 → P8 → E3 → P9 → S2 → E4 → TP5 → A1 | 5 |
+| F6 – Acompanhamento | A1 → TP3 → DS5 | 3 |
+| F7 – Repasse ao vendedor | P9 → P10 → E1 | 2 |
+
+DEP bruto = (4+4+3+5+5+3+2)/7/5 = 26/35 = 0,7429. O fluxo F4 visita P5 duas vezes (retorno do gateway antes do registro).
+
+### Comunidades estruturais e modularidade (seções 4.4.1; 8.9) — Quadro 40 do TCC
+
+`Q` = **0,5266**, cinco comunidades, divisão final única (sem empate entre divisões). Numeração pela menor posição de cadastro.
+
+| Comunidade | Nós | Saídas externas |
+|---|---|---|
+| C1 – catálogo, busca e moderação | A1, DS1, E7, P1, P2, S1, TP1, TP4 | 2 |
+| C2 – entrega, rastreio e pedidos do vendedor | A2, DS5, E3, P7, P8, P9, TP3, TP6 | 3 |
+| C3 – checkout e estoque | DS2, E5, P3, TP2 | 3 |
+| C4 – notificações | E4, S2, TP5 | 1 |
+| C5 – pedido, pagamento, repasse e nota fiscal | DS3, DS4, E1, E2, E6, P10, P11, P4, P5, P6 | 3 |
+
+Apenas C4 tem no máximo uma saída externa (TP5 → A1): AUT = 1/5 = 0,2000.
+
+### Resultado esperado das dez métricas — Quadro 42 do TCC
+
+| Eixo | Métrica bruta | Mín. | Máx. | Normalizado (0–5) |
+|---|---|---|---|---|
+| CO | 43 | 6 | 40 | 5,00 (limitado ao máximo, RN06) |
+| ESC | 0,9292 | 0 | 1 | 4,65 |
+| INT | 0,2857 | 0 | 1 | 1,43 |
+| UX | 1,1667 | 0 | 3 | 1,94 |
+| DISP | 0,7222 | 0 | 1 | 3,61 |
+| FLEX | 0,8419 | 0 | 1 | 4,21 |
+| TR | 0,0833 | 0 | 1 | 0,42 |
+| AUT | 0,2000 | 0 | 1 | 1,00 |
+| VOL | 2,2041 | 1 | 3 | 3,01 |
+| DEP | 0,7429 | 0,2 | 1 | 3,39 |
+
+### Distâncias até os perfis de referência — Quadros 43 e 45 do TCC e Quadro 54 (seção 9.7)
+
+Pesos `p_i = 0,1`; os dez eixos são aplicáveis (sem renormalização, DV-11).
+
+| Assinaturas | Monólito Modular | Microsserviços | Margem | Perfil mais próximo |
+|---|---|---|---|---|
+| Provisórias (Quadro 7) | 1,686 (33,7% do máximo) | 1,555 (31,1% do máximo) | 0,131 | **Microsserviços** |
+| Revisadas pelos especialistas (TCC 9.7) | 1,540 | 1,628 | 0,088 | **Monólito Modular** |
+
+Contribuições por eixo com as assinaturas provisórias (Quadro 43): Monólito Modular — CO 0,9000, ESC 0,9897, FLEX 0,7342; Microsserviços — INT 0,4291, TR 0,4340, AUT 1,2250. A soma das contribuições é a distância ao quadrado.
+
+Assinaturas revisadas (TCC 9.7): iguais às provisórias, exceto Monólito Modular ESC 2,0, FLEX 2,0 e DEP 2,5, e Microsserviços INT 4,0.
+
+### Observações
+
+- Cenário **construído pelos autores**, já conhecendo as métricas, como serviço em que Microsserviços é plausível; uma modelagem anterior do mesmo domínio, com mais acoplamento entre contextos, resultou em Monólito Modular com margem mínima (1,548 contra 1,630). Não serve como validação independente (seção 8.1).
+- Margem pequena (0,131) e indicação sensível: com os cinco repositórios consolidados em um único DS o perfil mais próximo passa a ser o Monólito Modular, e com as assinaturas revisadas também (TCC 8.12 e 9.7).
+- CO satura em 5,00 a partir de cerca de 30 nós (limite máximo 40, Quadro 6).

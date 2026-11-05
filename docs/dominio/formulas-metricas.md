@@ -1,10 +1,10 @@
 # Fórmulas das Métricas Arquiteturais (os Dez Eixos)
 
-> Fonte: o TCC II revisado (TCC revisado, 2026-10-21), seções 4.4 a 4.6 e Quadros 6, 7 e 8. Estas são as fórmulas **exatas** a implementar — cada uma deve virar uma classe/função pura testável isoladamente (POP-06), com a fórmula citada em comentário no código (POP-04).
+> Fonte: `docs/fontes/TCC.pdf` (TCC revisado, 2026-10-21), seções 4.4 a 4.6 e Quadros 5, 6 e 7. Estas são as fórmulas **exatas** a implementar — cada uma deve virar uma classe/função pura testável isoladamente (POP-06), com a fórmula citada em comentário no código (POP-04).
 >
 > **O que mudou em relação ao TCC anterior (`TCC_II_Entrega_3.pdf`)**: (1) `cluster(v)` deixou de ser o componente conexo do grafo e passou a ser a **comunidade estrutural** obtida por **detecção de comunidades por modularidade** (seção 4.4.1) — isso afeta FLEX e AUT; (2) os fluxos principais `F` são **entrada** (cadastrados e validados, RF05), não derivados automaticamente; (3) os perfis arquiteturais de referência foram **publicados** (Quadro 8). As fórmulas dos outros eixos não mudaram. Os valores esperados para cada estudo de caso estão em [`estudos-de-caso.md`](./estudos-de-caso.md).
 >
-> **Estado do código:** o back-end implementa o método **como este documento o descreve** — comunidades por modularidade (`DetectorDeComunidades`), fluxos como entrada e assinaturas do Quadro 8. O desempate do CNM (D9) segue a seção 4.4.1 do TCC.
+> **Estado do código** (2026-10-22): o backend implementa o método **como este documento o descreve** — comunidades por modularidade (`DetectorDeComunidades`), fluxos como entrada e assinaturas do Quadro 7 (Etapa 9; divergências DV-01, DV-02 e DV-03 fechadas, ver [`regras-de-negocio.md`](./regras-de-negocio.md)). O desempate do CNM (D9) foi adotado por padrão e aguarda confirmação.
 
 ## Notação geral
 
@@ -25,7 +25,7 @@
 
 ### Por que existe
 
-Na versão inicial do método, `cluster(v)` era o componente conexo do grafo. Como todo o Mapa acaba formando um único componente, `FLEX` e `AUT` valiam sempre o máximo para qualquer estrutura (o que tornava essas métricas constantes). A solução adotada pelo TCC revisado é agrupar os nós por **comunidades**: grupos de nós mais densamente conectados entre si do que com o restante do grafo.
+Na versão inicial do método, `cluster(v)` era o componente conexo do grafo. Como todo o Mapa acaba formando um único componente, `FLEX` e `AUT` valiam sempre o máximo para qualquer estrutura (prova em [`analise-critica.md`](./analise-critica.md), Achado 1 — hoje resolvido). A solução adotada pelo TCC revisado é agrupar os nós por **comunidades**: grupos de nós mais densamente conectados entre si do que com o restante do grafo.
 
 ### Definição formal
 
@@ -62,7 +62,7 @@ Só é preciso testar pares **ligados por aresta**: a fusão de duas comunidades
 
 **Empates (TCC de 2026-10-25, seção 4.4.1)**: a descrição original do algoritmo não define como escolher entre fusões de mesmo `ΔQ`. O procedimento do TCC é **explorar, a cada passo, todas as fusões empatadas e, entre as divisões finais assim obtidas, adotar a de maior `Q`** — o resultado não depende da ordem dos nós nem dos rótulos. Nos dois estudos de caso há duas divisões finais: Estudo de Caso 1 → 3 comunidades, `Q = 0,4117` (adotada) ou 4 comunidades, `Q = 0,4004`; Estudo de Caso 2 → 4 comunidades, `Q = 0,3440` (adotada) ou `Q = 0,3417` (ver `estudos-de-caso.md`). O guloso também não garante a divisão de maior modularidade possível (o TCC reprocessou os casos com Louvain, 30 sementes: `Q` de até 0,412 e 0,364, mesmo estilo mais próximo); por isso se registra o algoritmo e o `Q` em cada aplicação.
 
-### Casos-limite (D9)
+### Casos-limite (D9 — resolvida pelo TCC de 2026-10-25; ver `duvidas-pendentes.md`)
 
 | Situação | O que acontece | Convenção proposta |
 |---|---|---|
@@ -119,7 +119,7 @@ Grau de entrada médio dos nós Frontstage — característica estrutural das in
 ```
 DISP = 1 − [ Σ_{v ∈ V_Backstage ∪ V_Suporte} gargalo(v) ] / (n_Backstage + n_Suporte)
 ```
-Complemento da proporção de nós internos (Backstage + Suporte) marcados como gargalo (ponto potencialmente crítico: `carga(v) > μ_b + σ_b`, RN05). Um nó crítico fora dessas bandas **não entra**: no Estudo de Caso 2, TP2 (Frontstage) é crítico mas não afeta DISP (seção 7.8.1).
+Complemento da proporção de nós internos (Backstage + Suporte) marcados como gargalo (ponto potencialmente crítico: `carga(v) > μ_b + σ_b`, RN05). Um nó crítico fora dessas bandas **não entra**: no Estudo de Caso 2, TP2 (Frontstage) é crítico mas não afeta DISP (seção 7.4).
 
 ### Eixo 6 — Flexibilidade / Evolução (FLEX)
 
@@ -176,7 +176,7 @@ O `5` é o número total de bandas do SBAR.
 
 #### Fluxos principais (`F`) — entrada do usuário (RF05)
 
-No TCC revisado os fluxos principais **não são derivados do grafo**: são definidos pelos pesquisadores (seções 4.2.7, 6.6 e 7.6) e o protótipo deve **cadastrá-los e validá-los** (RF05, US03, CT09). Isso **supera** a decisão anterior do projeto (D2: derivar `F` automaticamente por DFS até "sinks" — "Opção B").
+No TCC revisado os fluxos principais **não são derivados do grafo**: são definidos pelos pesquisadores (seções 4.2.7, 6.6 e 7.2) e o protótipo deve **cadastrá-los e validá-los** (RF05, US03, CT09). Isso **supera** a decisão anterior do projeto (D2: derivar `F` automaticamente por DFS até "sinks" — "Opção B"), que está registrada só como histórico em `analise-critica.md` (Achado 4).
 
 Regras para o cadastro:
 1. Um fluxo é uma **sequência ordenada de nós** do Mapa (ex.: CE1 F2: `A → TP1 → TP2 → P1 → P2 → P3 → P4 → TP4`).
@@ -198,9 +198,9 @@ A escala 0–5 expressa a **intensidade relativa** da característica no serviç
 
 **Caso especial não coberto pelo TCC**: se `M_i_max == M_i_min` (configuração inválida de limites, divisão por zero), o comportamento correto não está definido na fonte. Convenção a adotar: tratar como erro de configuração explícito (lançar exceção ao salvar limites onde `max <= min`), nunca retornar um valor calculado silenciosamente.
 
-**Precisão/arredondamento (RNF03)**: o TCC exibe os valores normalizados com **no mínimo duas casas** e as distâncias com **três**. Os quadros publicados calculam as contribuições por eixo (Quadros 26 e 36) e as distâncias com os **normalizados sem arredondar** (conferido: CE1, Monólito, CO → `0,1 × (2,794 − 2)² = 0,0630`, e não `0,0624` do valor arredondado 2,79). Convenção: calcular em `double`/`decimal` de precisão total, arredondar só na apresentação, e nos testes comparar com tolerância (ex.: `precisao: 3`), nunca por igualdade exata de ponto flutuante.
+**Precisão/arredondamento (RNF03)**: o TCC exibe os valores normalizados com **no mínimo duas casas** e as distâncias com **três**. Os quadros publicados calculam as contribuições por eixo (Quadros 26 e 34) e as distâncias com os **normalizados sem arredondar** (conferido: CE1, Monólito, CO → `0,1 × (2,794 − 2)² = 0,0630`, e não `0,0624` do valor arredondado 2,79). Convenção: calcular em `double`/`decimal` de precisão total, arredondar só na apresentação, e nos testes comparar com tolerância (ex.: `precisao: 3`), nunca por igualdade exata de ponto flutuante.
 
-### Limites provisórios (Quadro 7 do TCC — ⚠️ ainda não calibrados/validados por especialistas)
+### Limites provisórios (Quadro 6 do TCC — ⚠️ ainda não calibrados/validados por especialistas)
 
 | Eixo | Métrica bruta | Mínimo | Máximo |
 |---|---|---|---|
@@ -211,7 +211,7 @@ A escala 0–5 expressa a **intensidade relativa** da característica no serviç
 | DISP | 1 − proporção de pontos potencialmente críticos | 0 | 1 |
 | FLEX | Isolamento médio dos nós internos | 0 | 1 |
 | TR | Proporção volumétrica crítica | 0 | 1 |
-| AUT | Proporção de comunidades autônomas (o Quadro 7 ainda escreve "clusters") | 0 | 1 |
+| AUT | Proporção de comunidades autônomas (o Quadro 6 ainda escreve "clusters") | 0 | 1 |
 | VOL | Peso médio por aresta | 1 | 3 |
 | DEP | Bandas médias por fluxo / 5 | 0,2 | 1 |
 
@@ -231,13 +231,14 @@ d(Servico, Estilo) = √( Σ_i p_i × (Norm_i^Servico − Norm_i^Estilo)² )
 - Como os eixos vão de 0 a 5 e `Σ p_i = 1`, a **distância máxima possível é 5**; qualquer distância pode ser lida como percentual desse máximo (CE1: 1,051 ≈ 21%, 1,605 ≈ 32%).
 - Além do valor absoluto, importa a **diferença entre as distâncias** dos estilos comparados (a "margem"): diferença pequena indica perfil intermediário e que a comparação, isoladamente, pouco diferencia os estilos (CE1: 0,553 ≈ 11% da escala; CE2: 0,239 ≈ 4,8%).
 - O estilo com menor distância é o **perfil de referência mais próximo** e constitui um **subsídio** à análise, não uma escolha: o resultado deve ser lido junto com contexto, requisitos, restrições organizacionais, custos e competências, que o Mapa não captura. O SBAR **não determina** uma arquitetura definitiva; "recommendation" no nome do método é uma indicação fundamentada e rastreável ao arquiteto (RN09: a tela deve apresentar o "perfil de referência mais próximo" com aviso de que não substitui a análise do arquiteto).
-- Cada eixo contribui `p_i × (diferença)²` para a soma; a **contribuição por eixo** mostra de onde vem a distância (RF10; Quadros 26 e 36).
+- **Eixo "não aplicável" (RN07/RN08, DV-11):** um eixo sem valor (denominador zero) não entra na soma. Para que `Σ p = 1` continue valendo e a distância máxima continue 5, os pesos dos eixos **aplicáveis** são renormalizados: `p'_i = p_i ÷ Σ_{j aplicável} p_j`, e a fórmula passa a usar `p'_i` no lugar de `p_i`. Com os dez eixos aplicáveis, `p'_i = p_i` (nada muda). Exemplo: DEP não aplicável e pesos `0,1` → `p'_i = 0,1 ÷ 0,9 = 1/9` nos nove eixos restantes. O TCC não detalha este caso; é convenção do projeto, registrada como DV-11. Se nenhum eixo for aplicável (ou os aplicáveis tiverem peso zero), não há distância: o resultado não traz perfil mais próximo e informa o motivo.
+- Cada eixo contribui `p'_i × (diferença)²` para a soma (`p'_i = p_i` quando os dez eixos são aplicáveis); a **contribuição por eixo** mostra de onde vem a distância (RF10; Quadros 26 e 34).
 
-## Assinaturas arquiteturais de referência (Quadro 8 do TCC)
+## Assinaturas arquiteturais de referência (Quadro 7 do TCC)
 
 Cada estilo é um vetor de valores 0–5 para os dez eixos. O TCC revisado **publica** os valores de dois estilos — **assinaturas provisórias**, atribuídas pelos pesquisadores para o experimento, com base nas características usualmente associadas a cada estilo, **sem medição empírica**, e que ainda precisam ser validadas por especialistas (protocolo da seção 5.4; revisão pela mediana das respostas). No produto continuam sendo editáveis (tela "Perfis Arquiteturais"), sem hardcode.
 
-| Eixo | Monólito Modular | Microsserviços | Justificativa (resumo do Quadro 8) |
+| Eixo | Monólito Modular | Microsserviços | Justificativa (resumo do Quadro 7) |
 |---|---|---|---|
 | CO | 2,0 | 4,0 | Microsserviços envolvem mais unidades implantáveis, integrações e infraestrutura; o Monólito concentra a operação numa unidade. |
 | ESC | 1,5 | 4,0 | Microsserviços pressupõem poucas ligações diretas entre elementos de uma mesma camada, permitindo escalar partes de forma independente; no Monólito os módulos compartilham o processo. |
@@ -250,3 +251,4 @@ Cada estilo é um vetor de valores 0–5 para os dez eixos. O TCC revisado **pub
 | VOL | 3,0 | **2,0** | No Monólito, chamadas internas baratas admitem comunicação mais intensa; em Microsserviços a comunicação intensa pela rede tende a ser evitada. |
 | DEP | 3,0 | 4,0 | Fluxos em Microsserviços tendem a atravessar mais fronteiras técnicas e organizacionais. |
 
+> **Histórico**: o projeto havia reconstruído esses vetores por engenharia reversa a partir das distâncias do TCC anterior (débito D1). A reconstrução coincide com o Quadro 8 em todos os eixos, **exceto VOL de Microsserviços**, que ficou em 4,2 (a outra raiz da ambiguidade do sistema de equações); o TCC revisado adotou **2,0**. D1 está resolvido pelo TCC; o seed do banco (nomes "(reconstruído)" e VOL = 4,2) ainda precisa ser atualizado — divergência DV-03.

@@ -1,6 +1,6 @@
 namespace Sbar.Domain.Interfaces;
 
-// Quem está fazendo a requisição (ver docs/projeto/ARQUITETURA.md). Implementado na Api a partir do HttpContext;
+// Quem está fazendo a requisição (PLANO_CONTAS_DE_USUARIO.md 4.2). Implementado na Api a partir do HttpContext;
 // Domain e Application só conhecem o Guid do dono, nunca a conta de Identity.
 public interface IUsuarioAtual
 {

@@ -16,7 +16,7 @@ public class EstudoDeCaso
     public string? DominioDescricao { get; private set; }
     public DateTime DataCriacao { get; private set; }
 
-    // Dono do Estudo de Caso (ver docs/projeto/ARQUITETURA.md). Só o Guid: a conta em si vive em Infrastructure.
+    // Dono do Estudo de Caso (PLANO_CONTAS_DE_USUARIO.md 4.2). Só o Guid: a conta em si vive em Infrastructure.
     // Anulável enquanto existirem casos publicados antes das contas (sem dono, reivindicados no cadastro).
     public Guid? DonoId { get; private set; }
 

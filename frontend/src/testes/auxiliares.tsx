@@ -110,10 +110,12 @@ export function fabricaRecomendacao(estiloRecomendado: string, distancias: Dista
     distancias,
     margem: ordenadas.length > 1 ? ordenadas[1].distancia - ordenadas[0].distancia : null,
     distanciaMaxima: 5,
+    pesosEfetivos: [],
+    eixosOmitidos: [],
   };
 }
 
-/** Conjunto de parâmetros: limites do Quadro 7 e pesos iguais (0,1), mais as assinaturas informadas. */
+/** Conjunto de parâmetros: limites do Quadro 6 e pesos iguais (0,1), mais as assinaturas informadas. */
 export function fabricaConjunto(numero = 1, descricao = 'Parâmetros iniciais', sobrescrever: Partial<ConjuntoDeParametros> = {}): ConjuntoDeParametros {
   const limites: Record<Eixo, [number, number]> = {
     CO: [6, 40], ESC: [0, 1], INT: [0, 1], UX: [0, 3], DISP: [0, 1], FLEX: [0, 1], TR: [0, 1], AUT: [0, 1], VOL: [1, 3], DEP: [0.2, 1],

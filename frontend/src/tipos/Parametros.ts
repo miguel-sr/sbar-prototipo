@@ -1,7 +1,7 @@
 import type { Eixo } from './Metricas';
 
-// Contrato da Onda 2 (9.5): parâmetros do cálculo versionados — limites (Quadro 7), pesos p_i (4.5.1)
-// e assinaturas de referência (Quadro 8). Cada alteração cria uma nova versão imutável (RF11, US06).
+// Contrato da Onda 2 (9.5): parâmetros do cálculo versionados — limites (Quadro 6), pesos p_i (4.5.1)
+// e assinaturas de referência (Quadro 7). Cada alteração cria uma nova versão imutável (RF11, US06).
 export interface VersaoDeParametros {
   numero: number;
   criadaEm: string;

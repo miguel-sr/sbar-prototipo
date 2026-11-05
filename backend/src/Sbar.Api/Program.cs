@@ -48,13 +48,13 @@ using (var escopoDeInicializacao = app.Services.CreateScope())
     escopoDeInicializacao.ServiceProvider.GetRequiredService<SbarDbContext>().Database.Migrate();
 
 // Disponível em todos os ambientes (não só Development) — é assim que os especialistas
-// batem na API antes do front existir (ver docs/projeto/ARQUITETURA.md).
+// batem na API antes do front existir (ARQUITETURA.md, PLANO_DE_IMPLEMENTACAO.md Etapa 7).
 // Protótipo acadêmico, sem dado sensível — mesma decisão de risco aceito já registrada para D4.
 app.UseSwagger();
 app.UseSwaggerUI();
 
 // Atrás do proxy com TLS (Caddy), a API enxerga HTTP; o X-Forwarded-Proto devolve o esquema original,
-// necessário para o cookie sair com Secure (ver docs/projeto/ARQUITETURA.md, seção 6).
+// necessário para o cookie sair com Secure (PLANO_CONTAS_DE_USUARIO.md seção 3).
 app.UseForwardedHeaders();
 app.UseExceptionHandler();
 app.UseHttpsRedirection();

@@ -13,7 +13,7 @@ public record VersaoDeParametrosDto(int Numero, DateTime CriadaEm, string Descri
         new(versao.Numero, versao.CriadaEm, versao.Descricao);
 }
 
-/// <summary>Limites de normalização (Quadro 7) e peso p_i de um eixo.</summary>
+/// <summary>Limites de normalização (Quadro 6) e peso p_i de um eixo.</summary>
 /// <param name="Eixo">CO, ESC, INT, UX, DISP, FLEX, TR, AUT, VOL ou DEP.</param>
 /// <param name="Minimo">Limite mínimo de referência M_i^min.</param>
 /// <param name="Maximo">Limite máximo de referência M_i^max (maior que o mínimo).</param>
@@ -24,7 +24,7 @@ public record ParametroDeEixoDto(Eixo Eixo, double Minimo, double Maximo, double
         new(parametro.Eixo, parametro.Minimo, parametro.Maximo, parametro.Peso);
 }
 
-/// <summary>Assinatura arquitetural de referência (Quadro 8) congelada numa versão dos parâmetros.</summary>
+/// <summary>Assinatura arquitetural de referência (Quadro 7) congelada numa versão dos parâmetros.</summary>
 /// <param name="Id">Id do Perfil Arquitetural correspondente.</param>
 /// <param name="Nome">Nome do estilo (ex.: "Monólito Modular (provisório)").</param>
 /// <param name="Valores">Valor 0–5 de cada eixo, com as chaves CO, ESC, INT, UX, DISP, FLEX, TR, AUT, VOL e DEP.</param>

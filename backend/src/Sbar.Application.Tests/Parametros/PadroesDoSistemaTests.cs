@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Sbar.Application.Tests.Parametros;
 
-// Os padrões do sistema (Quadro 7 e Quadro 8 do TCC revisado) são copiados para cada conta nova: precisam ser um
+// Os padrões do sistema (Quadro 6 e Quadro 7 do TCC revisado) são copiados para cada conta nova: precisam ser um
 // conjunto válido pelas mesmas regras que a edição aplica (RN07) e reproduzir os valores publicados.
 public class PadroesDoSistemaTests
 {

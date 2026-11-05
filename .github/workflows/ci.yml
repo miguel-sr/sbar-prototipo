@@ -5,8 +5,10 @@ on:
   push:
     branches: [main]
 jobs:
+# A imagem é fixada em ubuntu-24.04: o ubuntu-latest passou a ser 26.04 em nov/2026 e o
+# 'playwright install --with-deps' levou ~10 min (contra ~15 s) para instalar pacotes do sistema.
   build-and-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
@@ -33,7 +35,7 @@ jobs:
   # Front: typecheck, build de produção e testes unitários/de componente (Vitest). Roda em paralelo
   # ao job do backend — feedback rápido, sem navegador nem banco.
   frontend:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults:
       run:
         working-directory: frontend
@@ -73,7 +75,7 @@ jobs:
   # a publicação da imagem quando o E2E falhar? (Se sim: acrescentar `e2e` ao `needs` dele.)
   e2e:
     needs: [build-and-test, frontend]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     services:
       postgres:
         image: postgres:16-alpine
@@ -121,3 +123,23 @@ jobs:
             frontend/test-results
           retention-days: 7
           if-no-files-found: ignore
+
+  # Só builda/publica a imagem em push direto pra main (nunca em PR) e só se os testes passarem —
+  # é o que efetivamente impede uma imagem quebrada de chegar no Docker Hub e ser puxada pela EC2
+  # (o workflow CD dispara em cima do sucesso deste, ver .github/workflows/cd.yml).
+  build-and-push-image:
+    needs: build-and-test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: backend/src
+          file: backend/src/Sbar.Api/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/sbar:latest

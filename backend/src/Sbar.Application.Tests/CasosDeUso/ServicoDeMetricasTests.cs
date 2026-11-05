@@ -26,7 +26,7 @@ public class ServicoDeMetricasTests
     private static readonly VersaoDeParametrosInfo VersaoVigente =
         new(3, new DateTime(2026, 10, 21, 12, 0, 0, DateTimeKind.Utc), "Versão de teste");
 
-    // Quadro 7 (limites) + pesos iguais p_i = 0,1 (4.5.1).
+    // Quadro 6 (limites) + pesos iguais p_i = 0,1 (4.5.1).
     private static readonly IReadOnlyList<ParametroDeEixo> EixosDoQuadro7 =
     [
         new(Eixo.CO, 6, 40, 0.1), new(Eixo.ESC, 0, 1, 0.1), new(Eixo.INT, 0, 1, 0.1), new(Eixo.UX, 0, 3, 0.1),
@@ -70,7 +70,7 @@ public class ServicoDeMetricasTests
         resultado.Eixos.Single(r => r.Eixo == Eixo.DEP).ValorBruto.Should().BeApproximately(0.6, 0.0001);
     }
 
-    // Quadro 35 do TCC (Estudo de Caso 2) — CT03.
+    // Quadro 33 do TCC (Estudo de Caso 2) — CT03.
     [Fact]
     [Trait("Requisito", "CT03")]
     public async Task CalcularAsync_DeveRetornarOsDezEixosNormalizadosDoQuadro35_QuandoEstudoDeCaso2()
@@ -115,7 +115,8 @@ public class ServicoDeMetricasTests
     }
 
     [Fact]
-    [Trait("Requisito", "CT03")]
+    [Trait("Requisito", "CT11")]
+    [Trait("Requisito", "RN10")]
     public async Task CalcularAsync_DeveAvisarIdentificandoOsNos_QuandoHaNosSemNenhumaLigacao()
     {
         // Achado F-01 da bateria de testes: nós soltos (com m > 0) distorcem ESC/AUT/FLEX/DISP — no Estudo de Caso 1,
@@ -168,7 +169,7 @@ public class ServicoDeMetricasTests
     [Fact]
     public async Task CalcularAsync_DeveListarOsGargalosDeTodasAsBandas_QuandoEstudoDeCaso2()
     {
-        // Quadro 33 do TCC (Estudo de Caso 2): TP2 (Frontstage), P2 (Backstage) e DS (Suporte) — o de Frontstage não
+        // Quadro 31 do TCC (Estudo de Caso 2): TP2 (Frontstage), P2 (Backstage) e DS (Suporte) — o de Frontstage não
         // entra em DISP, mas a tela do Mapa precisa dele.
         var (estudoDeCaso, nos) = EstudosDeCasoDeReferencia.CriarEstudoDeCaso2();
         _estudoDeCasoRepositorio.Setup(r => r.ObterPorIdAsync(estudoDeCaso.Id)).ReturnsAsync(estudoDeCaso);
@@ -189,7 +190,7 @@ public class ServicoDeMetricasTests
         resultado.Recomendacao.Should().BeNull();
     }
 
-    // Reaplicação (5.4): com a versão 1 o limite máximo de CO é 40 (Quadro 7); com a vigente (45) o normalizado muda.
+    // Reaplicação (5.4): com a versão 1 o limite máximo de CO é 40 (Quadro 6); com a vigente (45) o normalizado muda.
     [Fact]
     public async Task CalcularAsync_DeveUsarOSnapshotDaVersaoPedida_QuandoReaplicaUmaVersaoAntiga()
     {
@@ -209,8 +210,8 @@ public class ServicoDeMetricasTests
         vigente.Eixos.Single(e => e.Eixo == Eixo.CO).ValorNormalizado.Should().BeApproximately(2.436, 0.001);
     }
 
-    // CT04 pelo serviço inteiro (Mapa → comunidades → dez eixos → distâncias) com as assinaturas do Quadro 8: distância até cada
-    // perfil (Quadros 27/37), soma das contribuições (Quadros 26/36), % do máximo (distância/5) e margem (6.10.1/7.10.1).
+    // CT04 pelo serviço inteiro (Mapa → comunidades → dez eixos → distâncias) com as assinaturas do Quadro 7: distância até cada
+    // perfil (Quadros 27/35), soma das contribuições (Quadros 26/34), % do máximo (distância/5) e margem (6.10.1/7.5).
     [Theory]
     [Trait("Requisito", "CT04")]
     [Trait("Requisito", "RF10")]
@@ -240,6 +241,42 @@ public class ServicoDeMetricasTests
         monolito.PercentualDoMaximo.Should().BeApproximately(percentualMonolito, 0.5);
         micro.PercentualDoMaximo.Should().BeApproximately(percentualMicro, 0.5);
         recomendacao.Margem.Should().BeApproximately(margem, 0.001);
+
+        // Com os dez eixos aplicáveis, os pesos efetivos são os configurados (0,1) e nenhum eixo é omitido: nada muda (RN07).
+        recomendacao.EixosOmitidos.Should().BeEmpty();
+        recomendacao.PesosEfetivos.Should().HaveCount(10).And.OnlyContain(p => p.PesoEfetivo == 0.1 && p.PesoConfigurado == 0.1);
+        resultado.Avisos.Should().NotContain(a => a.Contains("renormalizados"));
+    }
+
+    // RN07/RN08 — eixo "não aplicável" (aqui DEP, sem fluxos principais) sai da distância; os pesos dos outros nove são
+    // renormalizados (p' = 0,1 / 0,9) e o resultado avisa. A soma das contribuições continua sendo a distância ao quadrado.
+    [Fact]
+    [Trait("Requisito", "CT12")]
+    [Trait("Requisito", "RF10")]
+    [Trait("Requisito", "RN07")]
+    [Trait("Requisito", "RN08")]
+    public async Task CalcularAsync_DeveRenormalizarPesosEAvisar_QuandoDepNaoEAplicavel()
+    {
+        var (estudoDeCaso, _) = EstudosDeCasoDeReferencia.CriarEstudoDeCaso1();
+        foreach (var fluxo in estudoDeCaso.Fluxos.ToList())
+            estudoDeCaso.RemoverFluxo(fluxo.Id);
+        _estudoDeCasoRepositorio.Setup(r => r.ObterPorIdAsync(estudoDeCaso.Id)).ReturnsAsync(estudoDeCaso);
+        DefinirParametros(EixosDoQuadro7,
+            [AssinaturasDoQuadro8.MonolitoModular.ParaAssinatura(), AssinaturasDoQuadro8.Microsservicos.ParaAssinatura()]);
+
+        var resultado = await _servico.CalcularAsync(estudoDeCaso.Id);
+
+        var recomendacao = resultado.Recomendacao!;
+        recomendacao.EixosOmitidos.Should().Equal(Eixo.DEP);
+        recomendacao.PesosEfetivos.Should().HaveCount(9).And.OnlyContain(p => Math.Abs(p.PesoEfetivo - 0.1 / 0.9) < 1e-12);
+        recomendacao.PesosEfetivos.Sum(p => p.PesoEfetivo).Should().BeApproximately(1.0, 1e-12);
+        foreach (var distancia in recomendacao.Distancias)
+        {
+            distancia.Contribuicoes.Should().HaveCount(9);
+            Math.Pow(distancia.Distancia, 2).Should().BeApproximately(distancia.Contribuicoes.Sum(c => c.Contribuicao), 1e-12);
+            distancia.Distancia.Should().BeInRange(0, recomendacao.DistanciaMaxima);
+        }
+        resultado.Avisos.Should().ContainSingle(a => a.Contains("DEP") && a.Contains("renormalizados para somar 1"));
     }
 
     // CT10 — soma dos pesos diferente de 1 bloqueia o cálculo, com mensagem de erro (RN07).

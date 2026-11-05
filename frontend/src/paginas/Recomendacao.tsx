@@ -12,7 +12,7 @@ import { EIXOS, type Recomendacao as RecomendacaoDaApi } from '../tipos/Metricas
 const DISTANCIA_MAXIMA_PADRAO = 5;
 
 // T7 — Perfil de referência mais próximo (TCC 4.6, RN09): distância até cada Perfil Arquitetural, a
-// contribuição de cada eixo (Quadros 26/36), a margem entre as distâncias e a versão dos parâmetros.
+// contribuição de cada eixo (Quadros 26/34), a margem entre as distâncias e a versão dos parâmetros.
 // Mesma chamada de T6 (GET /api/casos/{id}/metricas), campo "recomendacao". É um SUBSÍDIO à decisão do
 // arquiteto, nunca uma decisão (D14: o nome da rota e do campo da API não mudam; só o texto de tela).
 export function Recomendacao() {
@@ -144,7 +144,7 @@ export function Recomendacao() {
           <h2 className="cartao__titulo">Contribuição de cada eixo para a distância</h2>
           <p className="texto-suave">
             pᵢ · (Normᵢ do serviço − Normᵢ do perfil)². Mostra de onde vem a diferença entre os perfis: os eixos com
-            maior contribuição são os que mais afastam o serviço do perfil (TCC 4.6, Quadros 26 e 36).
+            maior contribuição são os que mais afastam o serviço do perfil (TCC 4.6, Quadros 26 e 34).
           </p>
           <div className="tabela-rolagem">
             <table className="tabela" aria-label="Contribuição de cada eixo para a distância">

@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sbar.Infrastructure.Identidade;
 
-// os Estudos de Caso publicados antes das contas não têm dono. O usuário cujo
+// PLANO_CONTAS_DE_USUARIO.md A4/seção 5: os Estudos de Caso publicados antes das contas não têm dono. O usuário cujo
 // e-mail está configurado como dono do legado recebe todos eles ao se cadastrar. Idempotente: só toca em DonoId nulo.
 public class ReivindicadorDeCasosLegados(SbarDbContext contexto)
 {

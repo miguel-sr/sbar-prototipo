@@ -23,7 +23,7 @@ public class ClassificadorDeGargaloTests
         gargalos.Should().BeEquivalentTo([nos["P1"].Id, nos["DS"].Id]);
     }
 
-    // Quadro 33: TP2, P2 e DS — inclui um nó de Frontstage, que não entra no DISP mas precisa ser destacado
+    // Quadro 31: TP2, P2 e DS — inclui um nó de Frontstage, que não entra no DISP mas precisa ser destacado
     [Fact]
     [Trait("Requisito", "RN05")]
     public void Classificar_DeveIdentificarTP2P2EDS_QuandoForEstudoDeCaso2()
@@ -40,7 +40,7 @@ public class ClassificadorDeGargaloTests
     [Fact]
     public void Classificar_NuncaDeveMarcarGargalo_QuandoBandaTiverExatamenteDoisNos()
     {
-        // Identidade algébrica: para n=2, μ+σ = max(a,b) sempre —
+        // Identidade algébrica (analise-critica.md Achado 2): para n=2, μ+σ = max(a,b) sempre —
         // então o maior valor nunca é ESTRITAMENTE maior que o limiar, não importa a disparidade
         // entre as duas cargas. Aqui E1 fica com carga 9 e E2 com carga 1 (disparidade grande).
         var estudoDeCaso = EstudoDeCaso.Criar("Banda de dois nós");

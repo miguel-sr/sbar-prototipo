@@ -78,6 +78,7 @@ public class ServicoDeMetricas(
             avisos.Add($"{invalidos} fluxo(s) principal(is) inválido(s) — sem aresta em alguma etapa — ficam fora do cálculo de DEP (TCC 4.2.7).");
 
         avisos.AddRange(AvisosDeNosSemLigacao(estudoDeCaso, contexto));
+        avisos.AddRange(AvisosDeEixosNaoAplicaveis(eixos, parametros, recomendacao));
 
         return new ResultadoDeMetricas(
             eixos, recomendacao, nosGargalo, comunidades, contexto.Comunidades.ModularidadeQ, avisos, bandas, fluxos, parametros.Versao);
@@ -112,10 +113,34 @@ public class ServicoDeMetricas(
             return null;
 
         var pesos = parametros.Pesos;
+        var pesosEfetivos = ComparadorDePerfis.CalcularPesosEfetivos(eixos, pesos);
+        if (!pesosEfetivos.PodeComparar)
+            return null; // nenhum eixo aplicável com peso: não há distância a calcular (aviso em AvisosDeEixosNaoAplicaveis)
+
         var distancias = parametros.Assinaturas
             .Select(assinatura => ComparadorDePerfis.Comparar(eixos, assinatura, pesos))
             .ToList();
 
-        return GeradorDeRecomendacao.Gerar(distancias);
+        return GeradorDeRecomendacao.Gerar(distancias, pesosEfetivos);
+    }
+
+    // RN07/RN08 — eixo "não aplicável" fica fora da distância e os pesos dos demais são renormalizados (p'_i = p_i / Σ p_j),
+    // para que Σ p' = 1 e a distância máxima continue 5. O aviso deixa isso visível ao usuário (nada é omitido em silêncio).
+    private static IEnumerable<string> AvisosDeEixosNaoAplicaveis(
+        IReadOnlyList<ResultadoDeEixo> eixos, ConjuntoDeParametros parametros, Recomendacao? recomendacao)
+    {
+        if (parametros.Assinaturas.Count == 0)
+            yield break;
+
+        var omitidos = eixos.Where(e => !e.Aplicavel).Select(e => e.Eixo.ToString()).ToList();
+
+        if (recomendacao is null)
+        {
+            yield return "Nenhum eixo aplicável com peso: não há distância até os perfis de referência a calcular, e portanto não há perfil mais próximo (RN07/RN08).";
+            yield break;
+        }
+
+        if (omitidos.Count > 0)
+            yield return $"Eixo(s) não aplicável(is) fora da distância: {string.Join(", ", omitidos)}. Os pesos dos demais eixos foram renormalizados para somar 1 (RN07/RN08).";
     }
 }

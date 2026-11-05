@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Sbar.Domain.Tests;
 
-// RF11, RN07 e CT10 — validação dos parâmetros de análise: limites de normalização (Quadro 7) e pesos p_i (4.5.1).
+// RF11, RN07 e CT10 — validação dos parâmetros de análise: limites de normalização (Quadro 6) e pesos p_i (4.5.1).
 public class ConjuntoDeParametrosTests
 {
     private static List<ParametroDeEixo> DezEixosValidos() =>

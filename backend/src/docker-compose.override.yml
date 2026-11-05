@@ -4,8 +4,6 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__Sbar: "Host=sbar-db;Port=5432;Database=sbar;Username=sbar;Password=sbar"
-      # Sem um código de convite o cadastro fica fechado; este vale só para desenvolvimento.
-      Sbar__CodigoDeConvite: "desenvolvimento"
     ports:
       # 5185 no host = mesma porta que o proxy do Vite (frontend/vite.config.ts) já espera.
       - "5185:8080"

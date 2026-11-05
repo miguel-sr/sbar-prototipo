@@ -4,12 +4,12 @@ import type { CriarNoRequest } from '../../src/tipos/No';
 import { criarAresta, criarFluxo, criarNo, obterCaso } from './api';
 
 // Estudo de Caso 2 — Sistema de Agendamento de Clínica (TCC revisado).
-// Fonte: docs/dominio/estudos-de-caso.md — "Nós (15)" (Quadro 31), "Arestas (21)" (Quadro 32) e
-// "Fluxos principais F" (seção 7.6). (O backend tem a mesma fixture em C# —
+// Fonte: docs/dominio/estudos-de-caso.md — "Nós (15)" (Quadro 57), "Arestas (21)" (Quadro 58) e
+// "Fluxos principais F" (seção 7.2). (O backend tem a mesma fixture em C# —
 // Sbar.Application.Tests/Grafo/EstudosDeCasoDeReferencia.cs; a duplicação entre linguagens é
 // intencional e só serve de DADO DE ENTRADA: nenhuma regra ou fórmula é reimplementada aqui.)
 //
-// ATENÇÃO À ORDEM: os nós são cadastrados NA ORDEM do Quadro 31 (Paciente — criado pela interface —
+// ATENÇÃO À ORDEM: os nós são cadastrados NA ORDEM do Quadro 57 (Paciente — criado pela interface —
 // primeiro). A detecção de comunidades não depende da ordem (o TCC explora todos os empates e adota a
 // divisão de maior Q), mas a numeração C1…C4 segue a ordem de cadastro, como nos quadros do TCC.
 export const NO_ATOR = 'Paciente';
@@ -57,7 +57,7 @@ const ARESTAS: Array<[string, string, TipoDeAresta, Peso, string]> = [
   ['P5', 'E2', 'Batch', 1, 'Os dados do atendimento são sincronizados com o prontuário/convênio.'],
 ];
 
-// Fluxos principais F (entrada do método, seção 7.6): sequências de nós. F2 e F3 não começam no Ator.
+// Fluxos principais F (entrada do método, seção 7.2): sequências de nós. F2 e F3 não começam no Ator.
 const FLUXOS: Array<[string, string[]]> = [
   ['F1 – Agendamento', ['A', 'TP1', 'TP2', 'TP3', 'P2', 'DS']],
   ['F2 – Confirmação', ['P2', 'P3', 'S2', 'E1', 'TP4', 'A']],
@@ -66,7 +66,7 @@ const FLUXOS: Array<[string, string[]]> = [
   ['F4b – Sincronização externa', ['A', 'P5', 'E2']],
 ];
 
-/** Nós potencialmente críticos esperados (Quadro 33), para conferir o destaque no Mapa. */
+/** Nós potencialmente críticos esperados (Quadro 31), para conferir o destaque no Mapa. */
 export const GARGALOS_ESPERADOS = [NOS.TP2.nome, NOS.P2.nome, NOS.DS.nome];
 
 /** Quantidade de fluxos principais cadastrados pela fixture. */
@@ -75,7 +75,7 @@ export const QUANTIDADE_DE_FLUXOS = FLUXOS.length;
 /**
  * Cadastra pela API tudo do Estudo de Caso 2, EXCETO o nó Ator ("Paciente"), que o teste cria
  * pela interface — se o nó Ator já existir no caso, ele é reaproveitado. Se não existir, o
- * Paciente é o primeiro a ser criado (a ordem do Quadro 31 se mantém).
+ * Paciente é o primeiro a ser criado (a ordem do Quadro 57 se mantém).
  */
 export async function cadastrarClinicaPelaApi(request: APIRequestContext, casoId: string) {
   const ids = new Map<string, string>();

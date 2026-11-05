@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Sbar.Application.Tests.Rastreabilidade;
 
-// RF12, US07 (TCC 4.6.1, Quadros 28 e 38): a matriz é derivada do Mapa — gargalos (Quadros 23 e 33), arestas críticas e
+// RF12, US07 (TCC 4.6.1, Quadros 28 e 36): a matriz é derivada do Mapa — gargalos (Quadros 23 e 31), arestas críticas e
 // externas, comunidades e fluxos — e cada linha informa os nós e as arestas de origem.
 public class ConstrutorDeMatrizDeRastreabilidadeTests
 {
@@ -28,7 +28,7 @@ public class ConstrutorDeMatrizDeRastreabilidadeTests
         linhasDeGargalo.Should().OnlyContain(l => l.Eixos.SequenceEqual(new[] { Eixo.DISP }));
     }
 
-    // Quadro 38 do TCC revisado: TP2 (Frontstage) é gargalo e a matriz o liga a UX — ele NÃO entra em DISP (7.8.1: DISP só
+    // Quadro 36 do TCC revisado: TP2 (Frontstage) é gargalo e a matriz o liga a UX — ele NÃO entra em DISP (7.4: DISP só
     // considera Backstage e Suporte), então a linha traz o eixo da fórmula e explica a diferença.
     [Fact]
     public void Construir_DeveListarOGargaloDeFrontstageComUxENaoComDisp_QuandoEstudoDeCaso2()
@@ -67,7 +67,7 @@ public class ConstrutorDeMatrizDeRastreabilidadeTests
         critica.ArestasIds.Should().ContainSingle().Which.Should().Be(estudoDeCaso.Arestas.Single(a => a.Tipo == TipoDeAresta.Critica).Id);
     }
 
-    // INT (4.4.2): toda aresta ligada à banda Externo — 4 no Estudo de Caso 1 (Quadro 25) e 5 no 2 (Quadro 35, com as paralelas)
+    // INT (4.4.2): toda aresta ligada à banda Externo — 4 no Estudo de Caso 1 (Quadro 25) e 5 no 2 (Quadro 33, com as paralelas)
     [Theory]
     [InlineData(1, 4)]
     [InlineData(2, 5)]

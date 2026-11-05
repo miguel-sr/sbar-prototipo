@@ -117,7 +117,7 @@ public class ServicoDeParametros(
         await versoes.SalvarAsync();
     }
 
-    // Conta nova: copia os padrões do sistema (Quadro 7 e Quadro 8) para o usuário, antes da versão 1. Quem já tem
+    // Conta nova: copia os padrões do sistema (Quadro 6 e Quadro 7) para o usuário, antes da versão 1. Quem já tem
     // parâmetros (ex.: o dono do legado) mantém os seus.
     private async Task SemearPadroesSeNecessarioAsync()
     {

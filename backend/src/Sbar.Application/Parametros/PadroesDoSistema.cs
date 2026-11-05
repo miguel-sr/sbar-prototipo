@@ -3,11 +3,11 @@ using Sbar.Domain.ValueObjects;
 
 namespace Sbar.Application.Parametros;
 
-// Parâmetros de partida de toda conta nova: uma fonte só, em código, no lugar do
+// Parâmetros de partida de toda conta nova (PLANO_CONTAS_DE_USUARIO.md 4.3): uma fonte só, em código, no lugar do
 // seed da migration. Cada usuário recebe uma CÓPIA e passa a versioná-la por conta própria (RF11).
 public static class PadroesDoSistema
 {
-    // Limites de normalização do Quadro 7 do TCC revisado (docs/dominio/formulas-metricas.md); peso inicial 0,1 em
+    // Limites de normalização do Quadro 6 do TCC revisado (docs/dominio/formulas-metricas.md); peso inicial 0,1 em
     // todos os eixos (Σp_i = 1, RN07). Valores provisórios, ainda não calibrados por especialistas.
     public static IReadOnlyList<ParametroDeEixo> Eixos { get; } =
     [
@@ -23,7 +23,7 @@ public static class PadroesDoSistema
         new(Eixo.DEP, 0.2, 1.0, 0.1),
     ];
 
-    // Assinaturas provisórias do Quadro 8 (seção 4.6): valores atribuídos pelos pesquisadores, ainda a validar com
+    // Assinaturas provisórias do Quadro 7 (seção 4.6): valores atribuídos pelos pesquisadores, ainda a validar com
     // especialistas (protocolo 5.4) — por isso o nome mantém "(provisório)".
     public static IReadOnlyList<DadosDoPerfilArquitetural> Perfis { get; } =
     [

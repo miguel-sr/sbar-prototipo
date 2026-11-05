@@ -62,6 +62,9 @@ public static class ExportadorDeCsv
                 d.PerfilNome, d.Distancia, d.PercentualDoMaximo, d.PerfilNome == e.Recomendacao!.EstiloRecomendado, e.Recomendacao.Margem,
             }));
 
+        Secao(texto, "Pesos efetivos", ["eixo", "pesoConfigurado", "pesoEfetivo"],
+            (e.Recomendacao?.PesosEfetivos ?? []).Select(p => new object?[] { p.Eixo, p.PesoConfigurado, p.PesoEfetivo }));
+
         Secao(texto, "Contribuições por eixo", ["perfil", "eixo", "contribuicao"],
             distancias.SelectMany(d => d.Contribuicoes.Select(c => new object?[] { d.PerfilNome, c.Eixo, c.Contribuicao })));
 
