@@ -1,6 +1,6 @@
 # Regras de Negócio e Requisitos do Sistema SBAR
 
-> **Fonte oficial**: a seção 5.3 do TCC II revisado (`docs/fontes/TCC.pdf`) — Engenharia de Requisitos do protótipo — especifica formalmente o protótipo: stakeholders (Quadro 9), requisitos funcionais RF01–RF13 (Quadro 10), requisitos não funcionais RNF01–RNF06 (Quadro 11), regras de negócio RN01–RN10 (Quadro 12), histórias de usuário US01–US07 (Quadro 13) e casos de teste CT01–CT12 (Quadro 14, com o resultado da execução). Este documento adota **os IDs do TCC como identificadores oficiais**, detalha cada requisito para a implementação em C# (a partir de `metodo-sbar.md` e `formulas-metricas.md`) e registra, para cada um, o **estado no código atual**. Todo requisito é rastreável a uma seção do método (coluna "Origem"). Ver também `estudos-de-caso.md` (números de referência de teste) e `duvidas-pendentes.md` (checklist de decisão).
+> **Fonte oficial**: a seção 5.3 do TCC II revisado (`docs/fontes/TCC.pdf`) — Engenharia de Requisitos do protótipo — especifica formalmente o protótipo: stakeholders (Quadro 9), requisitos funcionais RF01–RF13 (Quadro 10), requisitos não funcionais RNF01–RNF06 (Quadro 11), regras de negócio RN01–RN10 (Quadro 12), histórias de usuário US01–US07 (Quadro 13) e casos de teste CT01–CT12 (Quadro 14, com o resultado da execução). Este documento adota **os IDs do TCC como identificadores oficiais**, detalha cada requisito para a implementação em C# (a partir de `metodo-sbar.md` e `formulas-metricas.md`) e registra, para cada um, o **estado no código atual**. Todo requisito é rastreável a uma seção do método (coluna "Origem"). Ver também `estudos-de-caso.md` (números de referência de teste).
 >
 > Última revisão: 2026-10-22, após a **Etapa 9** (código adequado ao TCC revisado; substitui `TCC_II_Entrega_3.pdf`). Os estados ✅/🟡/❌ abaixo foram conferidos contra o código e os testes desta data. A numeração antiga (RF-01…RF-12, RNF-01…03, D1…D8) está mapeada na tabela de equivalência da seção 1.
 
@@ -99,7 +99,7 @@ carga(v) > μ_b + σ_b
 ```
 **Estritamente maior** — carga igual ao limiar NÃO é crítica (caso de borda do POP-06). A classificação indica concentração estrutural no modelo, não comprova ponto único de falha (TCC 6.5, 7.3). Carga e classificação são recalculadas a cada leitura, **nunca persistidas** (RX02).
 
-> ⚠️ **Achado da auditoria matemática** (`analise-critica.md` Achado 2): para bandas com **exatamente 2 nós**, `μ+σ` é sempre igual ao maior dos dois valores (identidade algébrica), então esse nó **nunca** é crítico, por maior que seja sua carga relativa. Diferente da banda de 1 nó (`σ=0`, esperada e testada no POP-06). Implementar exatamente como o TCC define; os testes devem tratar isso como comportamento **esperado, não um bug** (já coberto por `Classificar_NuncaDeveMarcarGargalo_QuandoBandaTiverExatamenteDoisNos`). Segue válido no texto novo — ver item 3 de `duvidas-pendentes.md`.
+> ⚠️ **Achado da auditoria matemática** (`analise-critica.md` Achado 2): para bandas com **exatamente 2 nós**, `μ+σ` é sempre igual ao maior dos dois valores (identidade algébrica), então esse nó **nunca** é crítico, por maior que seja sua carga relativa. Diferente da banda de 1 nó (`σ=0`, esperada e testada no POP-06). Implementar exatamente como o TCC define; os testes devem tratar isso como comportamento **esperado, não um bug** (já coberto por `Classificar_NuncaDeveMarcarGargalo_QuandoBandaTiverExatamenteDoisNos`). Segue válido no texto novo.
 
 ### RF05 — Fluxos principais como entrada (TCC 4.2.7, 4.4.1, 4.4.2 eixo DEP, 6.6, 7.2)
 
@@ -268,7 +268,7 @@ Decisões de arquitetura e processo do projeto (POP-03/04/09), mantidas por sere
 
 ## Pontos de dúvida e decisões (D1–D14)
 
-Checklist consolidado, com opções e recomendação, em [`duvidas-pendentes.md`](./duvidas-pendentes.md). Resumo do estado:
+Resumo do estado das decisões (a lista detalhada de opções foi removida em 2026-11-07; está no histórico do git, `docs/dominio/duvidas-pendentes.md`):
 
 | ID | Tema | Estado |
 |---|---|---|
@@ -311,7 +311,7 @@ O capítulo 7 foi reescrito pelo usuário em 2026-09-18 com domínio próprio; s
 Histórico: a auditoria (`analise-critica.md` Achado 1) provou que, com `cluster(v)` por conectividade fraca, FLEX e AUT valem sempre 5,00; em 2026-09-17 decidiu-se implementar literalmente e revisitar, e foi proposto um limiar de intensidade de aresta (≥3). O TCC revisado seguiu **outro caminho**: `cluster(v)` por **detecção de comunidades por modularidade** (Clauset-Newman-Moore), e o ciclo está documentado na DSR (seção 3.2) e nas seções 6.12/7.7. A proposta do limiar foi preterida. Implementado na Etapa 9 (**DV-01 fechada**).
 
 ### D8 — Banco de dados e hospedagem — RESOLVIDO (2026-09-21)
-PostgreSQL via Npgsql, Postgres local por Docker Compose, hospedagem EC2 + Docker (Terraform, CD por `docker run`), front na Vercel; runbook em `docs/projeto/DEPLOY.md`. Detalhes em `duvidas-pendentes.md` item 8.
+PostgreSQL via Npgsql, Postgres local por Docker Compose, hospedagem EC2 + Docker (Terraform, CD por `docker run`), front na Vercel; runbook em `docs/projeto/DEPLOY.md`. Decisão D8.
 
 ### D9 — Determinismo e casos-limite da detecção de comunidades — RESOLVIDA (TCC de 2026-10-25)
 **Contexto.** RNF02 exige a mesma entrada ⇒ mesmo resultado, mas o TCC anterior (6.12 d) admitia que empates no ganho de modularidade geram divisões diferentes e não dizia como escolher. Casos-limite sem tratamento: `m = 0` (`Q` indefinido: 0/0), nós sem arestas (comunidade própria, saída externa 0 ⇒ "autônomos" no AUT) e comunidade única (FLEX = AUT = 1, degenerado).

@@ -2,7 +2,7 @@ using System.Net;
 
 namespace Sbar.Domain.Exceptions;
 
-// D6 — self-loop proibido (docs/dominio/duvidas-pendentes.md item 2)
+// D6 — self-loop proibido
 public class ArestaAutoReferenciadaException : DomainException
 {
     public ArestaAutoReferenciadaException(Guid noId)

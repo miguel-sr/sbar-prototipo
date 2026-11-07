@@ -16,7 +16,6 @@
   - [`estudos-de-caso.md`](./dominio/estudos-de-caso.md) — dados numéricos completos dos **três** Estudos de Caso, usados como golden data para os testes (POP-06) — valores do TCC revisado (Quadros 18–46 e 57–62).
   - [`analise-critica.md`](./dominio/analise-critica.md) — **auditoria matemática das fórmulas**: achados sobre comportamentos degenerados (gargalo em bandas de 2 nós, saturação de FLEX/AUT na definição anterior de `cluster(v)`, casos-limite das comunidades, etc.) — ler antes de implementar as calculadoras.
   - [`regras-de-negocio.md`](./dominio/regras-de-negocio.md) — requisitos funcionais/não funcionais numerados, com o histórico completo de cada débito técnico/dúvida (D1–D14) e como cada um foi resolvido.
-  - [`duvidas-pendentes.md`](./dominio/duvidas-pendentes.md) — **checklist consolidado do que ainda falta decidir**, sem a matemática/prova de cada achado (isso está em `analise-critica.md`) — é só a lista de perguntas em aberto, com espaço para a resposta.
 
 - **`projeto/`** — documentos de processo/gestão do projeto (POPs 01, 03 e 08), separados do conhecimento de domínio acima porque tratam de *como construir*, não de *o que é o método*:
   - [`ESCOPO.md`](./projeto/ESCOPO.md) — o que está dentro/fora desta primeira versão (POP-01), com histórico de alterações.
@@ -27,4 +26,4 @@
   - [`PLANO_CONTAS_DE_USUARIO.md`](./projeto/PLANO_CONTAS_DE_USUARIO.md) — **plano (não implementado)** de contas de usuário e vários Estudos de Caso por usuário: decisões, HTTPS na API, posse e isolamento, parâmetros por usuário, migração dos dados publicados, fases e testes.
   - [`DEPLOY.md`](./projeto/DEPLOY.md) — runbook de deploy (publicado): Terraform da EC2, runner self-hosted do GitHub Actions, segredos, CD por `docker run` e front na Vercel (débito D8).
 
-Ver também: [`frontend/README.md`](../frontend/README.md) (front-end, scripts e estratégia de testes) e, na raiz do repositório, `CLAUDE.md` (orientação para assistentes de IA trabalhando no código) e `CHANGELOG.md` (histórico de decisões e mudanças, POP-08).
+Ver também: [`frontend/README.md`](../frontend/README.md) (front-end, scripts e estratégia de testes).

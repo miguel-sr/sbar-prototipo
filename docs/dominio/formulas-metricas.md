@@ -62,7 +62,7 @@ Só é preciso testar pares **ligados por aresta**: a fusão de duas comunidades
 
 **Empates (TCC de 2026-10-25, seção 4.4.1)**: a descrição original do algoritmo não define como escolher entre fusões de mesmo `ΔQ`. O procedimento do TCC é **explorar, a cada passo, todas as fusões empatadas e, entre as divisões finais assim obtidas, adotar a de maior `Q`** — o resultado não depende da ordem dos nós nem dos rótulos. Nos dois estudos de caso há duas divisões finais: Estudo de Caso 1 → 3 comunidades, `Q = 0,4117` (adotada) ou 4 comunidades, `Q = 0,4004`; Estudo de Caso 2 → 4 comunidades, `Q = 0,3440` (adotada) ou `Q = 0,3417` (ver `estudos-de-caso.md`). O guloso também não garante a divisão de maior modularidade possível (o TCC reprocessou os casos com Louvain, 30 sementes: `Q` de até 0,412 e 0,364, mesmo estilo mais próximo); por isso se registra o algoritmo e o `Q` em cada aplicação.
 
-### Casos-limite (D9 — resolvida pelo TCC de 2026-10-25; ver `duvidas-pendentes.md`)
+### Casos-limite (D9 — resolvida pelo TCC de 2026-10-25)
 
 | Situação | O que acontece | Convenção proposta |
 |---|---|---|

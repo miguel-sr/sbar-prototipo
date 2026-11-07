@@ -83,7 +83,7 @@ Malha válida: todas as etapas dos dois fluxos têm aresta rastreável ao Bluepr
 | E1–TP2 | 1 | 3 | 2 | 26·1 − 3·2 = **20** |
 | P1–TP1 | 3 | 8 | 6 | 26·3 − 8·6 = **30** |
 
-Há um **empate** no maior ganho (A–TP1 e P1–DS, ambos 54). Neste exemplo ele não muda o resultado (as duas fusões acontecem de qualquer forma; testado com 300 sorteios de desempate), mas em grafos maiores empates podem levar a divisões finais diferentes: o TCC resolve isso explorando todas as fusões empatadas e adotando a divisão de maior Q (seção 4.4.1; decisão D9 em `duvidas-pendentes.md` e a seção de comunidades de `estudos-de-caso.md`). Sequência completa de fusões (o algoritmo para quando nenhuma fusão aumenta Q; o Q "todos separados" é negativo e cresce a cada fusão boa):
+Há um **empate** no maior ganho (A–TP1 e P1–DS, ambos 54). Neste exemplo ele não muda o resultado (as duas fusões acontecem de qualquer forma; testado com 300 sorteios de desempate), mas em grafos maiores empates podem levar a divisões finais diferentes: o TCC resolve isso explorando todas as fusões empatadas e adotando a divisão de maior Q (seção 4.4.1; decisão D9 em `regras-de-negocio.md` e a seção de comunidades de `estudos-de-caso.md`). Sequência completa de fusões (o algoritmo para quando nenhuma fusão aumenta Q; o Q "todos separados" é negativo e cresce a cada fusão boa):
 
 | # | Fusão escolhida | `2m·W_ij − K_i·K_j` | Pares empatados nesse ganho | Q após a fusão |
 |---|---|---|---|---|

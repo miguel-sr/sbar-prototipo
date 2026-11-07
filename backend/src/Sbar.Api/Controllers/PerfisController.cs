@@ -9,7 +9,7 @@ namespace Sbar.Api.Controllers;
 /// Perfis Arquiteturais de referência (ex.: "Monólito Modular", "Microsserviços") — tabela global,
 /// não vinculada a nenhum Estudo de Caso, usada por <c>GET /api/casos/{id}/metricas</c> para calcular
 /// a distância e a recomendação preliminar. Vem semeada com dois perfis reconstruídos (ver
-/// docs/dominio/duvidas-pendentes.md item 1); pode ser editada livremente por aqui.
+/// D1 em docs/dominio/regras-de-negocio.md); pode ser editada livremente por aqui.
 /// </summary>
 [ApiController]
 [Route("api/perfis-arquiteturais")]
